@@ -14,3 +14,6 @@ Before checking your project in, you have to tell Unity to modify the project st
 When checking the project into a version control system, you should add the Assets and the ProjectSettings directories to the system. The Library directory should be completely ignored - when using .meta files, it’s only a local cache of imported assets.
 
 When creating new assets, make sure both the asset itself and the associated .meta file is added to version control.
+
+### Links
+[.gitignore source](http://answers.unity3d.com/questions/369755/unity-on-github.html)
