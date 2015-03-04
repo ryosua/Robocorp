@@ -3,7 +3,7 @@
 ### Project Setup
 1. Download Unity 5.
 2. Clone this reposistory to your computer.
-3. Open the project in Unity.
+3. Open the project in Unity by selecting the "Open other" button and navigating to the repository.
 4. Set the editor to use Visible Meta Files (This is done by selecting Edit->Project Settings->Editor in the application 	menu and enabling External Version Control support by selecting Visible Meta 	Files in the dropdown for Version Control.)
 
 ### [Using External Version Control Systems with Unity](http://docs.unity3d.com/Manual/ExternalVersionControlSystemSupport.html)
