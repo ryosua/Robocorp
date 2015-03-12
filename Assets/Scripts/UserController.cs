@@ -6,9 +6,36 @@ using UnityEngine.UI;
 
 public class UserController : MonoBehaviour {
 
-	public InputField emailField;
-	public InputField passwordField;
+	public SceneController sceneController;
 
+	public InputField loginEmailField;
+	public InputField loginPasswordField;
+
+	public InputField registerEmailField;
+	public InputField registerPasswordField;
+
+	public void RegisterUser () {
+		string email = registerEmailField.text;
+		string password = registerPasswordField.text;
+		
+		print("The form was submitted.");
+		print("Email: " + email);
+		print("Password: " + password);
+
+		sceneController.GoToLoginScene ();
+	}
+
+	public void Login () {
+		string email = loginEmailField.text;
+		string password = loginPasswordField.text;
+		
+		print("The form was submitted.");
+		print("Email: " + email);
+		print("Password: " + password);
+		
+		sceneController.GoToTestScene ();
+	}
+	
 	// Use this for initialization
 	void Start () {
 	
@@ -18,14 +45,5 @@ public class UserController : MonoBehaviour {
 	void Update () {
 	
 	}
-	
-	public void RegisterUser () {
-		string email = emailField.text;
-		string password = passwordField.text;
 
-		print("The form was submitted.");
-		print("Email: " + email);
-		print("Password: " + password);
-	}
-	
 }
