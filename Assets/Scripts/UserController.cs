@@ -14,15 +14,28 @@ public class UserController : MonoBehaviour {
 	public InputField registerEmailField;
 	public InputField registerPasswordField;
 
+	private readonly string server_url = "http://ist446-ryosua.rhcloud.com/register.php";
+
 	public void RegisterUser () {
 		string email = registerEmailField.text;
 		string password = registerPasswordField.text;
-		
+
+		// Post to server.
+		WWWForm form = new WWWForm();
+		form.AddField("username", email);
+		form.AddField("password", password);
+		WWW postRequest = new WWW(server_url, form);
+
+		if (postRequest.error == null) {
+			// TODO If the user exists
+			sceneController.GoToLoginScene ();
+		} else {
+			print("Post error:" + postRequest.error);
+		}
+	
 		print("The form was submitted.");
 		print("Email: " + email);
 		print("Password: " + password);
-
-		sceneController.GoToLoginScene ();
 	}
 
 	public void Login () {
