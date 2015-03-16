@@ -5,7 +5,7 @@ public class PawnController : MonoBehaviour {
 
 	// set move speed
 	public float speed;
-	public bool commands = true;
+	public bool commandable = true;
 	public int OwningPlayer;
 
 	// public for debugging purposes
@@ -14,11 +14,11 @@ public class PawnController : MonoBehaviour {
 	public void MoveTo(Vector3 coord) {
 		// set move coord when called
 		moveCoordinates = coord;
-		commands = false;
 	}
 
 	// Use this for initialization
 	void Start () {
+		// set default coords
 		moveCoordinates = transform.position;
 	}
 
@@ -29,7 +29,6 @@ public class PawnController : MonoBehaviour {
 
 		// move pawn to given location using Lerp and Update
 		transform.position = Vector3.Lerp(transform.position, moveCoordinates, speed*Time.deltaTime);
-
 
 	}
 
