@@ -6,6 +6,7 @@ public class PawnController : MonoBehaviour {
 	// set move speed
 	public float speed;
 	public bool commands = true;
+	public int OwningPlayer;
 
 	// public for debugging purposes
 	public Vector3 moveCoordinates;
