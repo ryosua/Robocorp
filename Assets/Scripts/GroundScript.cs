@@ -1,11 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Main : MonoBehaviour {
-
-	void OnGUI () {
-		GUILayout.Label ("Hello World");
-	}
+public class GroundScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
