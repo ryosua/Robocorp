@@ -3,18 +3,22 @@ using System.Collections;
 
 public class SceneController : MonoBehaviour {
 
-	public void GoToRegisterScene() {
-		Application.LoadLevel("RegisterUser");
+	public void GoToCreditsScene() {
+		Application.LoadLevel("Credits");
 	}
 
-	public void GoToLoginScene() {
-		Application.LoadLevel("Login");
+	public void GoToInstructionsScene() {
+		Application.LoadLevel("Instructions");
+	}
+
+	public void GoToMenuScene() {
+		Application.LoadLevel("MainMenu");
 	}
 
 	public void GoToTestScene() {
 		Application.LoadLevel("TestScene");
 	}
-
+	
 	// Use this for initialization
 	void Start () {
 	
