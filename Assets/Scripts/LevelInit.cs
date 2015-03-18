@@ -4,6 +4,7 @@ using System.Collections;
 public class LevelInit : MonoBehaviour {
 
 	// arbitrary test prefabs here, this is what we populate the field with
+	public GroundScript currentTile;
 	public GameObject groundPanel;
 	public GameObject mainCamera;
 	public GameObject Resource1Panel;
@@ -31,10 +32,13 @@ public class LevelInit : MonoBehaviour {
 				if (tileRoll >= 0.05) {
 					Instantiate(groundPanel, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
 				    	                                 transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
+					// get current tile, stitch the tiles together to from grid
+					currentTile = groundPanel.GetComponent<GroundScript>();
 				}
 				else {
 					Instantiate(Resource1Panel, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
 					                                     transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
+					currentTile = Resource1Panel.GetComponent<GroundScript>();
 				}
 			}
 		}
@@ -60,7 +64,7 @@ public class LevelInit : MonoBehaviour {
 		Instantiate (testPlayer, transform.position, transform.rotation);
 
 		// spawn selector particle
-		Instantiate (selectorParticle, transform.position, transform.rotation);
+		Instantiate (selectorParticle, new Vector3(transform.position.x, transform.position.y, transform.position.z - 4), transform.rotation);
 		mainCamera.BroadcastMessage ("SetParams");
 	}
 	

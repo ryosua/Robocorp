@@ -7,9 +7,11 @@ public class CameraControls : MonoBehaviour {
 	public GameObject hitObject;
 	public GameObject selected;
 	public GameObject selectorParticle;
-	public float mouseX;
 	public GameObject CameraNWEdge;
 	public GameObject CameraSEEdge;
+	public float mouseX;
+
+	public int currentPlayer = 1;
 
 	// Use this for initialization
 	void Start () {
@@ -21,6 +23,11 @@ public class CameraControls : MonoBehaviour {
 		selectorParticle = GameObject.FindGameObjectWithTag ("Selector Particle");
 		CameraNWEdge = GameObject.FindGameObjectWithTag ("Map NW Corner");
 		CameraSEEdge = GameObject.FindGameObjectWithTag ("Map SE Corner");
+	}
+
+	// set camera to other player between turns
+	void TakeTurn() {
+
 	}
 	
 	// Update is called once per frame
@@ -39,7 +46,8 @@ public class CameraControls : MonoBehaviour {
 					selected = hit.transform.gameObject;
 
 					// move selection particle
-					selectorParticle.BroadcastMessage ("MoveTo", selected.transform.gameObject.transform.position);
+					selectorParticle.BroadcastMessage ("FlashTo", selected.transform.gameObject);
+					selectorParticle.BroadcastMessage ("StartParticle");
 				}
 			}
 		}
@@ -58,8 +66,8 @@ public class CameraControls : MonoBehaviour {
 					if (!(hit.transform.gameObject.tag == ("MovementBlocker"))) {
 
 						// move the pawn using that pawn's code
-						selected.BroadcastMessage ("MoveTo", hit.transform.gameObject.transform.position);
-						selectorParticle.BroadcastMessage ("MoveTo", hit.transform.gameObject.transform.position);
+						selected.BroadcastMessage ("MoveTo", hit.transform.gameObject);
+						selectorParticle.BroadcastMessage ("MoveTo", hit.transform.gameObject);
 					}
 				}
 			}
