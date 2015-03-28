@@ -5,20 +5,25 @@ using System.Collections;
 public class ParticleBase : PawnController {
 
 	ParticleSystem ps;
+	public GameObject selectedPawn;
 
 
 	// Use this for initialization
 	void Start () {
 		// get particle system
 		ps = (ParticleSystem)GetComponent ("ParticleSystem");
+
+		commandable = false;
+		selectedPawn = transform.gameObject;
 	}
 
 	// function to move particle to selected area
 	void FlashTo(GameObject target) {
+
 		// update all movement vars at once (instantaneous movement)
 		transform.localPosition = target.transform.position;
-		moveCoordinates = target.transform.position;
-		currentTile = target;
+		currentTile = target.GetComponent<PawnController>().currentTile;
+		moveCoordinates = currentTile.transform.position;
 	}
 
 	// function to start a particle playing
@@ -28,4 +33,16 @@ public class ParticleBase : PawnController {
 		}
 	}
 	
+	public override void MoveTo(int direction) {
+		// delibrately blank
+		return;
+	}
+
+	void Update () {
+		moveCoordinates = selectedPawn.transform.position;
+
+		// move pawn to given location using Lerp and Update
+		transform.position = Vector3.Lerp(transform.position, moveCoordinates, (speed* 10)*Time.deltaTime);
+
+	}
 }

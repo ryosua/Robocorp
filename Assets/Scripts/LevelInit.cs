@@ -14,6 +14,9 @@ public class LevelInit : MonoBehaviour {
 	public GameObject CameraNWEdge;
 	public GameObject CameraSEEdge;
 
+	// logic arrays
+	GameObject[,] mapArray;
+
 	// must type in grid sizes in-editor; make numbers even for best results
 	public int panelSize;
 	public int levelWidth;
@@ -22,6 +25,9 @@ public class LevelInit : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		// init array to hold field
+		mapArray = new GameObject [levelLength+2, levelWidth+2];
+
 		// spawn one block for every spot in the defined grid
 		for (int i = 0; i < levelLength; i++) {
 			for (int j = 0; j < levelWidth; j++) {
@@ -30,15 +36,12 @@ public class LevelInit : MonoBehaviour {
 				tileRoll = Random.value;
 
 				if (tileRoll >= 0.05) {
-					Instantiate(groundPanel, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
+					mapArray[i+1, j+1] = (GameObject)Instantiate(groundPanel, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
 				    	                                 transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
-					// get current tile, stitch the tiles together to from grid
-					currentTile = groundPanel.GetComponent<GroundScript>();
 				}
 				else {
-					Instantiate(Resource1Panel, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
+					mapArray[i+1,j+1] = (GameObject)Instantiate(Resource1Panel, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
 					                                     transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
-					currentTile = Resource1Panel.GetComponent<GroundScript>();
 				}
 			}
 		}
@@ -53,6 +56,28 @@ public class LevelInit : MonoBehaviour {
 			}
 		}
 
+		// stitch together map
+		for (int i = 0; i < levelLength; i++) {
+			for (int j = 0; j < levelWidth; j++) {
+				// get tiles from array, add map info to each GroundScript
+				currentTile = mapArray[i+1,j+1].GetComponent<GroundScript> ();
+
+				// check for valid blocks
+				if (mapArray[i,j+1] != null) {
+					currentTile.left_block = mapArray[i,j+1];
+				}
+				if (mapArray[i+1,j] != null) {
+					currentTile.down_block = mapArray[i+1,j];
+				}
+				if (mapArray[i+1,j+2] != null) {
+					currentTile.up_block = mapArray[i+1,j+2];
+				}
+				if (mapArray[i+2,j+1] != null) {
+					currentTile.right_block = mapArray[i+2,j+1];
+				}
+			}
+		}
+
 		// spawn camera blockers
 		Instantiate (CameraNWEdge, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) - 3*panelSize,
 		                                       transform.position.y + (panelSize * levelLength / 2) + 3*panelSize), this.transform.rotation);
@@ -60,12 +85,16 @@ public class LevelInit : MonoBehaviour {
 		Instantiate (CameraSEEdge, new Vector3(transform.position.x + (panelSize * (levelWidth / 2)) + 3*panelSize,
 		                                       transform.position.y - (panelSize * levelLength / 2) - 3*panelSize), this.transform.rotation);
 
-		// spawn test sprite
-		Instantiate (testPlayer, transform.position, transform.rotation);
+		// spawn test sprite in middle of map
+		testPlayer = (GameObject)Instantiate (testPlayer, mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth/2)].transform.position, transform.rotation);
+		testPlayer.BroadcastMessage("SetTile", mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth/2)]);
 
 		// spawn selector particle
-		Instantiate (selectorParticle, new Vector3(transform.position.x, transform.position.y, transform.position.z - 4), transform.rotation);
-		mainCamera.BroadcastMessage ("SetParams");
+		selectorParticle = (GameObject)Instantiate (selectorParticle, mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth/2)].transform.position, transform.rotation);
+		selectorParticle.BroadcastMessage("SetTile", mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth/2)]);
+
+		// setup camera
+		mainCamera.BroadcastMessage("SetParams");
 	}
 	
 

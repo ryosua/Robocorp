@@ -44,6 +44,7 @@ public class CameraControls : MonoBehaviour {
 			if (hit.collider != null) {
 				if ((hit.transform.gameObject.tag == "Selectable") || (hit.transform.gameObject.tag == "Selectable and Movable")) {
 					selected = hit.transform.gameObject;
+					selectorParticle.GetComponent<ParticleBase>().selectedPawn = selected;
 
 					// move selection particle
 					selectorParticle.BroadcastMessage ("FlashTo", selected.transform.gameObject);
@@ -66,8 +67,8 @@ public class CameraControls : MonoBehaviour {
 					if (!(hit.transform.gameObject.tag == ("MovementBlocker"))) {
 
 						// move the pawn using that pawn's code
-						selected.BroadcastMessage ("MoveTo", hit.transform.gameObject);
-						selectorParticle.BroadcastMessage ("MoveTo", hit.transform.gameObject);
+						selected.BroadcastMessage ("MoveTo", "up");
+						selectorParticle.BroadcastMessage ("MoveTo", "up");
 					}
 				}
 			}
@@ -75,6 +76,51 @@ public class CameraControls : MonoBehaviour {
 			hitObject = hit.transform.gameObject;
 		}
 
+		// if we hit up key
+		else if (Input.GetKeyDown("up")) {
+
+			// if we hit keys while something is selected...
+			if (selected != null) {
+
+				selected.BroadcastMessage ("MoveTo", 1);
+				selectorParticle.BroadcastMessage ("MoveTo", 1);
+			}
+		}
+
+		// if we hit down key
+		else if (Input.GetKeyDown("down")) {
+
+			// if we hit keys while something is selected...
+			if (selected != null) {
+				
+				selected.BroadcastMessage ("MoveTo", 2);
+				selectorParticle.BroadcastMessage ("MoveTo", 2);
+			}
+		}
+
+		// if we hit left key
+		else if (Input.GetKeyDown("left")) {
+
+			// if we hit keys while something is selected...
+			if (selected != null) {
+				
+				selected.BroadcastMessage ("MoveTo", 3);
+				selectorParticle.BroadcastMessage ("MoveTo", 3);
+			}
+		}
+
+		// if we hit right key
+		else if (Input.GetKeyDown("right")) {
+
+			// if we hit keys while something is selected...
+			if (selected != null) {
+				
+				selected.BroadcastMessage ("MoveTo", 4);
+				selectorParticle.BroadcastMessage ("MoveTo", 4);
+			}
+		}
+
+		// camera movement
 		if ((Input.mousePosition.x <20)) {
 
 			// move camera left
