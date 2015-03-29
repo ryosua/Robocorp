@@ -67,8 +67,28 @@ public class CameraControls : MonoBehaviour {
 					if (!(hit.transform.gameObject.tag == ("MovementBlocker"))) {
 
 						// move the pawn using that pawn's code
-						selected.BroadcastMessage ("MoveTo", "up");
-						selectorParticle.BroadcastMessage ("MoveTo", "up");
+						// determine direction with distance from selection
+						float xDist = hit.transform.position.x - selected.transform.position.x;
+						float yDist = hit.transform.position.y - selected.transform.position.y;
+
+						if (Mathf.Abs (xDist) >= Mathf.Abs (yDist)) {
+
+							if (xDist > 0) {
+								selected.BroadcastMessage("MoveTo", 4);
+							}
+							else {
+								selected.BroadcastMessage("MoveTo", 3);
+							}
+						}
+						else {
+							
+							if (yDist > 0) {
+								selected.BroadcastMessage("MoveTo", 1);
+							}
+							else {
+								selected.BroadcastMessage("MoveTo", 2);
+							}
+						}
 					}
 				}
 			}
