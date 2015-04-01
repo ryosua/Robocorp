@@ -11,11 +11,13 @@ public class CameraControls : MonoBehaviour {
 	public GameObject CameraSEEdge;
 	public float mouseX;
 
+	public bool paused;
+
 	public int currentPlayer = 1;
 
 	// Use this for initialization
 	void Start () {
-
+		paused = false;
 	}
 
 	// function to grab selector particle (called in init after it is created
@@ -141,26 +143,26 @@ public class CameraControls : MonoBehaviour {
 		}
 
 		// camera movement
-		if ((Input.mousePosition.x <20)) {
+		if ((Input.mousePosition.x <10) && (transform.position.x > CameraNWEdge.transform.position.x + 12) && (!paused)) {
 
 			// move camera left
 			transform.position =new Vector3(transform.position.x - 0.1f, transform.position.y, transform.position.z);
 
 		}
-		else if ((Input.mousePosition.x >Screen.width -20)) {
+		else if ((Input.mousePosition.x >Screen.width -10) && (transform.position.x < CameraSEEdge.transform.position.x - 13) && (!paused)) {
 
 			// move camera right
 			transform.position =new Vector3(transform.position.x + 0.1f, transform.position.y, transform.position.z);
 
 		}
 
-		if ((Input.mousePosition.y <20)) {
+		if ((Input.mousePosition.y <10) && (transform.position.y > CameraSEEdge.transform.position.y + 6) && (!paused)) {
 			
 			// move camera down
 			transform.position =new Vector3(transform.position.x, transform.position.y - 0.1f, transform.position.z);
 
 		}
-		else if ((Input.mousePosition.y >Screen.height -20)) {
+		else if ((Input.mousePosition.y >Screen.height -10) && (transform.position.y < CameraNWEdge.transform.position.y - 7) && (!paused)) {
 			
 			// move camera up
 			transform.position =new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z);
