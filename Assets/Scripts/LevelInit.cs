@@ -13,7 +13,7 @@ public class LevelInit : MonoBehaviour {
 	public GameObject groundPanel;
 	public GameObject mainCamera;
 	public GameObject Resource1Panel;
-	public GameObject testPlayer;
+	public GameObject settlerUnit;
 	public GameObject selectorParticle;
 	public GameObject MapBlocker;
 	public GameObject CameraNWEdge;
@@ -95,8 +95,8 @@ public class LevelInit : MonoBehaviour {
 		                                       transform.position.y - (panelSize * levelLength / 2) - 3*panelSize), this.transform.rotation);
 
 		// spawn test sprite in middle of map
-		testPlayer = (GameObject)Instantiate (testPlayer, mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth/2)].transform.position, transform.rotation);
-		testPlayer.BroadcastMessage("SetTile", mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth/2)]);
+		settlerUnit = (GameObject)Instantiate (settlerUnit, mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth/2)].transform.position, transform.rotation);
+		settlerUnit.BroadcastMessage("SetTile", mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth/2)]);
 
 		// spawn selector particle
 		selectorParticle = (GameObject)Instantiate (selectorParticle, mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth/2)].transform.position, transform.rotation);
@@ -104,6 +104,8 @@ public class LevelInit : MonoBehaviour {
 
 		// setup camera
 		mainCamera.BroadcastMessage("SetParams");
+		mainCamera.transform.position = mapArray [Mathf.FloorToInt (levelLength / 2), Mathf.FloorToInt (levelWidth / 2)].transform.position;
+		mainCamera.transform.position = new Vector3 (mainCamera.transform.position.x, mainCamera.transform.position.y, -11);
 
 		// setup players
 		player1 = new PlayerController();

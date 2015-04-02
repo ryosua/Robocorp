@@ -10,16 +10,22 @@ public class CameraControls : MonoBehaviour {
 	public GameObject selectorParticle;
 	public GameObject CameraNWEdge;
 	public GameObject CameraSEEdge;
+	public GameObject player1Base;
+	public GameObject player2Base;
 
 	// dynamic UI elements
 	public Text moveText;
 	public Text actionText;
 	public Text healthText;
 	public Text attackText;
+	public Button endTurn;
 	public GameObject actionPanel;
 
 	// get level init object (for player lists, unit lists)
 	public GameObject levelInit;
+
+	// turn bool
+	int turn;
 
 	// mouse location values
 	public float mouseX;
@@ -35,18 +41,35 @@ public class CameraControls : MonoBehaviour {
 	void Start () {
 		currentPlayer = 1;
 		paused = false;
+		turn = 0;
 	}
 
 	// function to grab selector particle (called in init after it is created
 	void SetParams() {
+
+		// setup camera params
 		selectorParticle = GameObject.FindGameObjectWithTag ("Selector Particle");
 		CameraNWEdge = GameObject.FindGameObjectWithTag ("Map NW Corner");
 		CameraSEEdge = GameObject.FindGameObjectWithTag ("Map SE Corner");
 	}
 
 	// set camera to other player between turns
-	void TakeTurn() {
+	public void TakeTurn() {
+		if (turn == 0) {
 
+			// do turn bookkeeping
+			levelInit.GetComponent<LevelInit> ().player1.TakeTurn ();
+			turn = 1;
+
+			// move camera to player 1's base
+
+		} 
+		else {
+
+			// do turn bookkeeping
+			levelInit.GetComponent<LevelInit>().player2.TakeTurn ();
+			turn = 0;
+		}
 	}
 
 	// function to set up UI when a pawn is clicked; UIState = 0 if not initialized, 1 if initialized
