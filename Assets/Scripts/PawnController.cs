@@ -14,12 +14,22 @@ public class PawnController : Pawn {
 
 	// number of owning player
 	public int owningPlayer;
+	public int unitID;
+
+	// action stats
 	public int actionsPerTurn;
 	public int movesPerAction;
-	public GameObject currentTile;
 	public int currentActions;
 	public int currentMoves;
 
+	// tile info
+	public GameObject currentTile;
+
+	// combat stats
+	public int health;
+	public int attackDamage;
+
+	// vector for movement target (always lerps here)
 	public Vector3 moveCoordinates;
 
 	// function to declare the owner of a unit
@@ -30,6 +40,21 @@ public class PawnController : Pawn {
 	// function to set initial tile
 	public void SetTile(GameObject tile) {
 		currentTile = tile;
+	}
+
+	// code to attack a target (set by camera)
+	public void Attack(GameObject target) {
+
+		// subtract damage from target
+		target.transform.gameObject.GetComponent<PawnController> ().health = target.transform.gameObject.GetComponent<PawnController> ().health - attackDamage;
+
+		// decrement current action count
+		currentActions = currentActions - 1;
+	}
+
+	// code to self-destruct (if health reaches 0, or if chosen)
+	public void Destroy() {
+		GameObject.Destroy (transform.gameObject);
 	}
 
 	// function to move a given pawn on grid (directions: up = 1, down = 2, left = 3, right = 4)
@@ -97,7 +122,7 @@ public class PawnController : Pawn {
 	}
 
 	// turn function: process how many moves this pawn gets per turn here
-	public void takeTurn () {
+	public void TakeTurn () {
 
 		// refresh moves
 		currentMoves = movesPerAction;

@@ -3,7 +3,12 @@ using System.Collections;
 
 public class LevelInit : MonoBehaviour {
 
-	// arbitrary test prefabs here, this is what we populate the field with
+	// default starting game parameters
+	public int startOre;
+	public int startOil;
+	public int startGold;
+
+	// init prefabs here, this is what we populate the field with
 	public GroundScript currentTile;
 	public GameObject groundPanel;
 	public GameObject mainCamera;
@@ -13,6 +18,10 @@ public class LevelInit : MonoBehaviour {
 	public GameObject MapBlocker;
 	public GameObject CameraNWEdge;
 	public GameObject CameraSEEdge;
+
+	// init players
+	public PlayerController player1;
+	public PlayerController player2;
 
 	// logic arrays
 	GameObject[,] mapArray;
@@ -95,6 +104,13 @@ public class LevelInit : MonoBehaviour {
 
 		// setup camera
 		mainCamera.BroadcastMessage("SetParams");
+
+		// setup players
+		player1 = new PlayerController();
+		player1.InitPlayer (1, startOre, startGold, startOil);
+
+		player2 = new PlayerController();
+		player2.InitPlayer (2, startOre, startGold, startOil);
 	}
 	
 

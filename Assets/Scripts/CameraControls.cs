@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class CameraControls : MonoBehaviour {
@@ -9,14 +10,30 @@ public class CameraControls : MonoBehaviour {
 	public GameObject selectorParticle;
 	public GameObject CameraNWEdge;
 	public GameObject CameraSEEdge;
-	public float mouseX;
 
+	// dynamic UI elements
+	public Text moveText;
+	public Text actionText;
+	public Text healthText;
+	public Text attackText;
+	public GameObject actionPanel;
+
+	// get level init object (for player lists, unit lists)
+	public GameObject levelInit;
+
+	// mouse location values
+	public float mouseX;
+	public float mouseY;
+
+	// bool to stop camera movement
 	public bool paused;
 
-	public int currentPlayer = 1;
+	// keep track of current player
+	public int currentPlayer;
 
 	// Use this for initialization
 	void Start () {
+		currentPlayer = 1;
 		paused = false;
 	}
 
@@ -31,11 +48,62 @@ public class CameraControls : MonoBehaviour {
 	void TakeTurn() {
 
 	}
+
+	// function to set up UI when a pawn is clicked; UIState = 0 if not initialized, 1 if initialized
+	void UIUpdatePawnInfo() {
+		// set color and correct numbers for moves/actions on UI
+		// check if the unit even has those
+		PawnController selectedUnit = selected.transform.gameObject.GetComponent<PawnController>();
+
+		// check if we have selected something
+		if (selected != null) {
+
+			// if it is movable, display moves and actions
+			if (selectedUnit.movable == true) {
+
+				moveText.color = Color.black;
+				moveText.text = "Moves Remaining:\t" + selectedUnit.currentMoves.ToString ();
+			}
+
+			// in all cases, display actions, health, and attack (even if 0)
+			actionText.color = Color.black;
+			actionText.text = "Actions Remaining:\t" + selectedUnit.currentActions.ToString ();
+
+			healthText.color = Color.black;
+			healthText.text = "Unit Health:\t\t" + selectedUnit.health.ToString ();
+
+			attackText.color = Color.black;
+			attackText.text = "Attack Power:\t" + selectedUnit.attackDamage.ToString ();
+
+			// activate actionPanel color
+			actionPanel.GetComponent<Image>().color = Color.red;
+		}
+	}
+
+	// function to remove UI elements when a pawn is clicked
+	void UIDeselectPawn() {
+		// assume no pawn is selected now
+		moveText.color = Color.grey;
+		moveText.text = "Moves Remaining:";
+
+		actionText.color = Color.grey;
+		actionText.text = "Actions Remaining:";
+
+		healthText.color = Color.grey;
+		healthText.text = "Unit Health:";
+		
+		attackText.color = Color.grey;
+		attackText.text = "Attack Power:";
+		
+		// activate actionPanel color
+		actionPanel.GetComponent<Image>().color = Color.grey;
+	}
 	
 	// Update is called once per frame
 	void Update(){
 
 		mouseX = Input.mousePosition.x;
+		mouseY = Input.mousePosition.y;
 
 		// if we left click in the camera, select the pawn (if selectable)
 		if (Input.GetMouseButtonDown (0)) {
@@ -51,6 +119,20 @@ public class CameraControls : MonoBehaviour {
 					// move selection particle
 					selectorParticle.BroadcastMessage ("FlashTo", selected.transform.gameObject);
 					selectorParticle.BroadcastMessage ("StartParticle");
+
+					// update UI (flush it really quick in case we are going from one pawn to another
+					UIDeselectPawn();
+					UIUpdatePawnInfo();
+				}
+
+				// deselection code
+				else {
+					// deselect pawn, move selection particle off screen
+					selected = null;
+					selectorParticle.BroadcastMessage ("FlashTo", CameraSEEdge.transform.gameObject);
+
+					// update UI
+					UIDeselectPawn();
 				}
 			}
 		}
@@ -91,6 +173,8 @@ public class CameraControls : MonoBehaviour {
 								selected.BroadcastMessage("MoveTo", 2);
 							}
 						}
+						// update UI
+						UIUpdatePawnInfo();
 					}
 				}
 			}
@@ -106,6 +190,9 @@ public class CameraControls : MonoBehaviour {
 
 				selected.BroadcastMessage ("MoveTo", 1);
 				selectorParticle.BroadcastMessage ("MoveTo", 1);
+
+				// update UI
+				UIUpdatePawnInfo();
 			}
 		}
 
@@ -117,6 +204,9 @@ public class CameraControls : MonoBehaviour {
 				
 				selected.BroadcastMessage ("MoveTo", 2);
 				selectorParticle.BroadcastMessage ("MoveTo", 2);
+
+				// update UI
+				UIUpdatePawnInfo();
 			}
 		}
 
@@ -128,6 +218,9 @@ public class CameraControls : MonoBehaviour {
 				
 				selected.BroadcastMessage ("MoveTo", 3);
 				selectorParticle.BroadcastMessage ("MoveTo", 3);
+
+				// update UI
+				UIUpdatePawnInfo();
 			}
 		}
 
@@ -139,30 +232,33 @@ public class CameraControls : MonoBehaviour {
 				
 				selected.BroadcastMessage ("MoveTo", 4);
 				selectorParticle.BroadcastMessage ("MoveTo", 4);
+
+				// update UI
+				UIUpdatePawnInfo();
 			}
 		}
 
 		// camera movement
-		if ((Input.mousePosition.x <10) && (transform.position.x > CameraNWEdge.transform.position.x + 12) && (!paused)) {
+		if ((mouseX < 7) && (transform.position.x > CameraNWEdge.transform.position.x + 12) && (!paused)) {
 
 			// move camera left
 			transform.position =new Vector3(transform.position.x - 0.1f, transform.position.y, transform.position.z);
 
 		}
-		else if ((Input.mousePosition.x >Screen.width -10) && (transform.position.x < CameraSEEdge.transform.position.x - 13) && (!paused)) {
+		else if ((mouseX >Screen.width -7) && (transform.position.x < CameraSEEdge.transform.position.x - 13) && (!paused)) {
 
 			// move camera right
 			transform.position =new Vector3(transform.position.x + 0.1f, transform.position.y, transform.position.z);
 
 		}
 
-		if ((Input.mousePosition.y <10) && (transform.position.y > CameraSEEdge.transform.position.y + 6) && (!paused)) {
+		if ((mouseY < 5) && (transform.position.y > CameraSEEdge.transform.position.y + 6) && (!paused)) {
 			
 			// move camera down
 			transform.position =new Vector3(transform.position.x, transform.position.y - 0.1f, transform.position.z);
 
 		}
-		else if ((Input.mousePosition.y >Screen.height -10) && (transform.position.y < CameraNWEdge.transform.position.y - 7) && (!paused)) {
+		else if ((mouseY >Screen.height -7) && (transform.position.y < CameraNWEdge.transform.position.y - 7) && (!paused)) {
 			
 			// move camera up
 			transform.position =new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z);
