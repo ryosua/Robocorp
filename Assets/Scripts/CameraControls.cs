@@ -18,6 +18,10 @@ public class CameraControls : MonoBehaviour {
 	public Text actionText;
 	public Text healthText;
 	public Text attackText;
+	public Text playerText;
+	public Text oilText;
+	public Text goldText;
+	public Text oreText;
 	public Button endTurn;
 	public GameObject actionPanel;
 
@@ -26,6 +30,12 @@ public class CameraControls : MonoBehaviour {
 
 	// turn bool
 	int turn;
+
+	// camera move bool
+	bool moveBool;
+
+	// vector for movement target (always lerps here)
+	public Vector3 moveCoordinates;
 
 	// mouse location values
 	public float mouseX;
@@ -40,8 +50,19 @@ public class CameraControls : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		currentPlayer = 1;
+		moveBool = false;
 		paused = false;
-		turn = 0;
+		turn = 1;
+	}
+
+	// sets camera focus on end turn; for the given player, the camera flies to this object on their turn start
+	void SetBase(int playerID, GameObject baseObject) {
+		if (playerID == 1) {
+			player1Base = baseObject;
+		} 
+		else if (playerID == 2) {
+			player2Base = baseObject;
+		}
 	}
 
 	// function to grab selector particle (called in init after it is created
@@ -55,20 +76,31 @@ public class CameraControls : MonoBehaviour {
 
 	// set camera to other player between turns
 	public void TakeTurn() {
-		if (turn == 0) {
+		if (turn == 1) {
 
 			// do turn bookkeeping
-			levelInit.GetComponent<LevelInit> ().player1.TakeTurn ();
-			turn = 1;
+			levelInit.GetComponent<LevelInit> ().player2.TakeTurn ();
+			turn = 0;
 
-			// move camera to player 1's base
-
+			// move camera to player 2's base
+			moveCoordinates = new Vector3(player2Base.transform.position.x, player2Base.transform.position.y, -10);
+			moveBool = true;
+			currentPlayer = 2;
+			playerText.text = "Player 2";
+			UIResourceUpdate();
 		} 
 		else {
 
 			// do turn bookkeeping
-			levelInit.GetComponent<LevelInit>().player2.TakeTurn ();
-			turn = 0;
+			levelInit.GetComponent<LevelInit>().player1.TakeTurn ();
+			turn = 1;
+
+			// move camera to player 1's base
+			moveCoordinates = new Vector3(player1Base.transform.position.x, player1Base.transform.position.y, -10);
+			moveBool = true;
+			currentPlayer = 1;
+			playerText.text = "Player 1";
+			UIResourceUpdate();
 		}
 	}
 
@@ -121,6 +153,23 @@ public class CameraControls : MonoBehaviour {
 		// activate actionPanel color
 		actionPanel.GetComponent<Image>().color = Color.grey;
 	}
+
+	// function to update resource UI
+	public void UIResourceUpdate() {
+		// update all UI text as above on resource panel
+		PlayerController player;
+
+		if (currentPlayer == 1) {
+			player = levelInit.GetComponent<LevelInit> ().player1;
+		} 
+		else {
+			player = levelInit.GetComponent<LevelInit> ().player2;
+		}
+
+		oilText.text = "Oil:\t" + player.oilCount.ToString ();
+		goldText.text = "Gold:\t" + player.goldCount.ToString ();
+		oreText.text = "Ore:\t" + player.oreCount.ToString ();
+	}
 	
 	// Update is called once per frame
 	void Update(){
@@ -136,16 +185,22 @@ public class CameraControls : MonoBehaviour {
 			
 			if (hit.collider != null) {
 				if ((hit.transform.gameObject.tag == "Selectable") || (hit.transform.gameObject.tag == "Selectable and Movable")) {
-					selected = hit.transform.gameObject;
-					selectorParticle.GetComponent<ParticleBase>().selectedPawn = selected;
 
-					// move selection particle
-					selectorParticle.BroadcastMessage ("FlashTo", selected.transform.gameObject);
-					selectorParticle.BroadcastMessage ("StartParticle");
+					// make sure the current player owns this pawn
+					if (hit.transform.gameObject.GetComponent<PawnController>().owningPlayer == currentPlayer) {
 
-					// update UI (flush it really quick in case we are going from one pawn to another
-					UIDeselectPawn();
-					UIUpdatePawnInfo();
+						// update selection
+						selected = hit.transform.gameObject;
+						selectorParticle.GetComponent<ParticleBase>().selectedPawn = selected;
+
+						// move selection particle
+						selectorParticle.BroadcastMessage ("FlashTo", selected.transform.gameObject);
+						selectorParticle.BroadcastMessage ("StartParticle");
+
+						// update UI (flush it really quick in case we are going from one pawn to another
+						UIDeselectPawn();
+						UIUpdatePawnInfo();
+					}
 				}
 
 				// deselection code
@@ -181,19 +236,31 @@ public class CameraControls : MonoBehaviour {
 						if (Mathf.Abs (xDist) >= Mathf.Abs (yDist)) {
 
 							if (xDist > 0) {
-								selected.BroadcastMessage("MoveTo", 4);
+								if (selected.GetComponent<PawnController>().MoveTo(4) == 0) {
+									moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
+									moveBool = true;
+								}
 							}
 							else {
-								selected.BroadcastMessage("MoveTo", 3);
+								if (selected.GetComponent<PawnController>().MoveTo(3) == 0) {
+									moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
+									moveBool = true;
+								}
 							}
 						}
 						else {
 							
 							if (yDist > 0) {
-								selected.BroadcastMessage("MoveTo", 1);
+								if (selected.GetComponent<PawnController>().MoveTo(1) == 0) {
+									moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
+									moveBool = true;
+								}
 							}
 							else {
-								selected.BroadcastMessage("MoveTo", 2);
+								if (selected.GetComponent<PawnController>().MoveTo(2) == 0) {
+									moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);;
+									moveBool = true;
+								}
 							}
 						}
 						// update UI
@@ -211,8 +278,10 @@ public class CameraControls : MonoBehaviour {
 			// if we hit keys while something is selected...
 			if (selected != null) {
 
-				selected.BroadcastMessage ("MoveTo", 1);
-				selectorParticle.BroadcastMessage ("MoveTo", 1);
+				if (selected.GetComponent<PawnController>().MoveTo(1) == 0) {
+					moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
+					moveBool = true;
+				}
 
 				// update UI
 				UIUpdatePawnInfo();
@@ -225,8 +294,10 @@ public class CameraControls : MonoBehaviour {
 			// if we hit keys while something is selected...
 			if (selected != null) {
 				
-				selected.BroadcastMessage ("MoveTo", 2);
-				selectorParticle.BroadcastMessage ("MoveTo", 2);
+				if (selected.GetComponent<PawnController>().MoveTo(2) == 0) {
+					moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
+					moveBool = true;
+				}
 
 				// update UI
 				UIUpdatePawnInfo();
@@ -239,8 +310,10 @@ public class CameraControls : MonoBehaviour {
 			// if we hit keys while something is selected...
 			if (selected != null) {
 				
-				selected.BroadcastMessage ("MoveTo", 3);
-				selectorParticle.BroadcastMessage ("MoveTo", 3);
+				if (selected.GetComponent<PawnController>().MoveTo(3) == 0) {
+					moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
+					moveBool = true;
+				}
 
 				// update UI
 				UIUpdatePawnInfo();
@@ -253,8 +326,10 @@ public class CameraControls : MonoBehaviour {
 			// if we hit keys while something is selected...
 			if (selected != null) {
 				
-				selected.BroadcastMessage ("MoveTo", 4);
-				selectorParticle.BroadcastMessage ("MoveTo", 4);
+				if (selected.GetComponent<PawnController>().MoveTo(4) == 0) {
+					moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
+					moveBool = true;
+				}
 
 				// update UI
 				UIUpdatePawnInfo();
@@ -286,6 +361,17 @@ public class CameraControls : MonoBehaviour {
 			// move camera up
 			transform.position =new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z);
 			
+		}
+
+		// code to move camera to a location (at turn end)
+		if (moveBool == true) {
+			// check if we moved
+			Vector3 oldPosition = transform.position;
+			transform.position = Vector3.Lerp(transform.position, moveCoordinates, 10*Time.deltaTime);
+
+			if (oldPosition == transform.position) {
+				moveBool = false;
+			}
 		}
 	}
 }

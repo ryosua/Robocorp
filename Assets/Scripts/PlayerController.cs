@@ -18,6 +18,9 @@ public class PlayerController {
 	// function to place default values to start game
 	public void InitPlayer(int player_num, int startOre, int startGold, int startOil) {
 
+		// default construct
+		Start ();
+
 		// set values
 		playerNumber = player_num;
 		oreCount = startOre;
@@ -29,6 +32,9 @@ public class PlayerController {
 	// function to take turn for all of a player's units
 	public void TakeTurn() {
 
+		// reset enumerator
+		e = unitList.GetEnumerator ();
+
 		GameObject currentUnit;
 
 		// while we aren't at the end of the list...
@@ -38,9 +44,6 @@ public class PlayerController {
 			currentUnit = e.Current;
 			currentUnit.GetComponent<PawnController>().TakeTurn ();
 		}
-
-		// reset enumerator
-		e = unitList.GetEnumerator ();
 	}
 
 	// function to add unit to player array
@@ -51,13 +54,16 @@ public class PlayerController {
 		unitCount = unitCount + 1;
 
 		// add unit to list
-		unitList.AddLast (unit);
+		unitList.AddFirst (unit);
 
 		// return unit list
 		return unitCount;
 	}
 
 	public void RemoveUnit(int unit_id) {
+
+		// reset the enumerator
+		e = unitList.GetEnumerator ();
 
 		// while we aren't at the end of the list...
 		while (e.MoveNext()) {
@@ -68,8 +74,7 @@ public class PlayerController {
 				// destroy the object
 				unitList.Remove (e.Current);
 
-				// reset the enumerator, break
-				e = unitList.GetEnumerator ();
+				// break from while loop
 				break;
 			}
 		}

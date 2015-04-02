@@ -13,7 +13,8 @@ public class LevelInit : MonoBehaviour {
 	public GameObject groundPanel;
 	public GameObject mainCamera;
 	public GameObject Resource1Panel;
-	public GameObject settlerUnit;
+	public GameObject settlerUnit1;
+	public GameObject settlerUnit2;
 	public GameObject selectorParticle;
 	public GameObject MapBlocker;
 	public GameObject CameraNWEdge;
@@ -94,14 +95,6 @@ public class LevelInit : MonoBehaviour {
 		Instantiate (CameraSEEdge, new Vector3(transform.position.x + (panelSize * (levelWidth / 2)) + 3*panelSize,
 		                                       transform.position.y - (panelSize * levelLength / 2) - 3*panelSize), this.transform.rotation);
 
-		// spawn test sprite in middle of map
-		settlerUnit = (GameObject)Instantiate (settlerUnit, mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth/2)].transform.position, transform.rotation);
-		settlerUnit.BroadcastMessage("SetTile", mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth/2)]);
-
-		// spawn selector particle
-		selectorParticle = (GameObject)Instantiate (selectorParticle, mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth/2)].transform.position, transform.rotation);
-		selectorParticle.BroadcastMessage("SetTile", mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth/2)]);
-
 		// setup camera
 		mainCamera.BroadcastMessage("SetParams");
 		mainCamera.transform.position = mapArray [Mathf.FloorToInt (levelLength / 2), Mathf.FloorToInt (levelWidth / 2)].transform.position;
@@ -110,14 +103,39 @@ public class LevelInit : MonoBehaviour {
 		// setup players
 		player1 = new PlayerController();
 		player1.InitPlayer (1, startOre, startGold, startOil);
-
+		
 		player2 = new PlayerController();
 		player2.InitPlayer (2, startOre, startGold, startOil);
+
+		// spawn player1's settler on bottom of map
+		settlerUnit1 = (GameObject)Instantiate (settlerUnit1, mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth/8)].transform.position, transform.rotation);
+		settlerUnit1.BroadcastMessage("SetTile", mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth/8)]);
+		settlerUnit1.BroadcastMessage ("SetOwner", 1);
+
+		// add settler to player1's unit list, set unit's unitID
+		settlerUnit1.GetComponent<PawnController>().unitID = player1.AddUnit(settlerUnit1);
+		mainCamera.GetComponent<CameraControls> ().player1Base = settlerUnit1;
+
+
+		// spawn player2's settler on bottom of map
+		settlerUnit2 = (GameObject)Instantiate (settlerUnit2, mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth -(levelWidth/8))].transform.position, transform.rotation);
+		settlerUnit2.BroadcastMessage("SetTile", mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth - (levelWidth/8))]);
+		settlerUnit2.BroadcastMessage ("SetOwner", 2);
+
+		// add settler to player1's unit list, set unit's unitID
+		settlerUnit2.GetComponent<PawnController>().unitID = player2.AddUnit(settlerUnit2);
+		mainCamera.GetComponent<CameraControls> ().player2Base = settlerUnit2;
+
+		// spawn selector particle
+		selectorParticle = (GameObject)Instantiate (selectorParticle, mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth/2)].transform.position, transform.rotation);
+		selectorParticle.BroadcastMessage("SetTile", mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth/2)]);
+
+		mainCamera.BroadcastMessage ("SetParams");
+		mainCamera.BroadcastMessage ("UIResourceUpdate");
 	}
-	
 
 	// Update is called once per frame
 	void Update () {
-	
+
 	}
 }

@@ -44,9 +44,9 @@ public class ParticleBase : PawnController {
 		}
 	}
 	
-	public override void MoveTo(int direction) {
+	public override int MoveTo(int direction) {
 		// delibrately blank
-		return;
+		return 0;
 	}
 
 	void Update () {

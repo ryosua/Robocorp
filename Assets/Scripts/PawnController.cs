@@ -58,7 +58,7 @@ public class PawnController : Pawn {
 	}
 
 	// function to move a given pawn on grid (directions: up = 1, down = 2, left = 3, right = 4)
-	public override void MoveTo(int direction) {
+	public override int MoveTo(int direction) {
 
 		// store direction in nextTile to simplify code
 		GameObject nextTile;
@@ -74,15 +74,14 @@ public class PawnController : Pawn {
 			break;
 		case 3:
 			nextTile = currentTile.GetComponent<GroundScript>().left_block;
-			break;;
+			break;
 		case 4:
 			nextTile = currentTile.GetComponent<GroundScript>().right_block;
 			break;
 		default:
 			// errored out, return
-			return;
+			return -1;
 		}
-
 
 		// check if this pawn can move
 		if (movable == true) {
@@ -111,14 +110,16 @@ public class PawnController : Pawn {
 							nextTile.GetComponent<GroundScript>().occupied = true;
 							// set new currentTile
 							currentTile = nextTile;
+
+							return 0;
 						}
 					}
 				}
 			}
 		}
-		else {
-			// UI code for "invalid move"
-		}
+
+		// if we are here, we can't move
+		return -1;
 	}
 
 	// turn function: process how many moves this pawn gets per turn here
