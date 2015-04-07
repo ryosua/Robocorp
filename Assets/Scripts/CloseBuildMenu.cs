@@ -6,8 +6,7 @@ public class CloseBuildMenu : MonoBehaviour {
 	public GameObject buildMenu;
 
 	public void OnClick () {
-		buildMenu.GetComponent<CanvasGroup>().alpha = 0;
-		print("Closing Build menu.");
+		buildMenu.SetActive (false);
 	}
 
 	// Use this for initialization
