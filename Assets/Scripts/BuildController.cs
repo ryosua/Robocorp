@@ -3,6 +3,62 @@ using System.Collections;
 
 public class BuildController : MonoBehaviour {
 
+	public void OnBuySettlerBotClick () {
+		// Subtract the cost of the purchase
+		// Close build menu
+		// Have the user place the character
+
+		print ("Settler bought");
+	}
+
+	public void OnBuyHeavyBotClick () {
+		// Subtract the cost of the purchase
+		// Close build menu
+		// Have the user place the character
+
+		print ("Heavy bought");
+	}
+
+	public void OnBuyMeleeBotClick () {
+		// Subtract the cost of the purchase
+		// Close build menu
+		// Have the user place the character 
+
+		print ("Melee bought");
+	}
+
+	public void OnBuySettlerBotWithGoldClick () {
+		// Subtract the cost of the purchase
+		// Close build menu
+		// Have the user place the character
+
+		print ("Settler bought with gold.");
+	}
+	
+	public void OnBuyHeavyBotWithGoldClick () {
+		// Subtract the cost of the purchase
+		// Close build menu
+		// Have the user place the character
+
+		print ("Heavy bought with gold.");
+	}
+	
+	public void OnBuyMeleeBoWithGoldClick () {
+		// Subtract the cost of the purchase
+		// Close build menu
+		// Have the user place the character 
+
+		print ("Melee bought with gold.");
+	}
+
+	public void OnBuyFortificationsWithGoldClick () {
+		// Subtract the cost of the purchase
+		// Close build menu
+		// Have the user place the character
+
+		print ("Fortifications bought.");
+	}
+
 	// Use this for initialization
 	void Start () {
 	
