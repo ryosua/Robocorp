@@ -111,18 +111,23 @@ public class LevelInit : MonoBehaviour {
 		settlerUnit1 = (GameObject)Instantiate (settlerUnit1, mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth/8)].transform.position, transform.rotation);
 		settlerUnit1.BroadcastMessage("SetTile", mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth/8)]);
 		settlerUnit1.BroadcastMessage ("SetOwner", 1);
+		settlerUnit1.BroadcastMessage ("SetCamera", mainCamera);
+		settlerUnit1.GetComponent<PawnController> ().currentTile.GetComponent<GroundScript> ().SetOccupant (settlerUnit1);
 
 		// add settler to player1's unit list, set unit's unitID
 		settlerUnit1.GetComponent<PawnController>().unitID = player1.AddUnit(settlerUnit1);
 		mainCamera.GetComponent<CameraControls> ().player1Base = settlerUnit1;
+		mainCamera.GetComponent<CameraControls> ().MoveTo (settlerUnit1);
 
 
 		// spawn player2's settler on bottom of map
 		settlerUnit2 = (GameObject)Instantiate (settlerUnit2, mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth -(levelWidth/8))].transform.position, transform.rotation);
 		settlerUnit2.BroadcastMessage("SetTile", mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth - (levelWidth/8))]);
 		settlerUnit2.BroadcastMessage ("SetOwner", 2);
+		settlerUnit2.BroadcastMessage ("SetCamera", mainCamera);
+		settlerUnit2.GetComponent<PawnController> ().currentTile.GetComponent<GroundScript> ().SetOccupant (settlerUnit2);
 
-		// add settler to player1's unit list, set unit's unitID
+		// add settler to player2's unit list, set unit's unitID
 		settlerUnit2.GetComponent<PawnController>().unitID = player2.AddUnit(settlerUnit2);
 		mainCamera.GetComponent<CameraControls> ().player2Base = settlerUnit2;
 

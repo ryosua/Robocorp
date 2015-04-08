@@ -22,6 +22,8 @@ public class PawnController : Pawn {
 	public int currentActions;
 	public int currentMoves;
 
+	public GameObject mainCamera;
+
 	// tile info
 	public GameObject currentTile;
 
@@ -42,18 +44,45 @@ public class PawnController : Pawn {
 		currentTile = tile;
 	}
 
+	// function to set main camera
+	public void SetCamera(GameObject camera) {
+		mainCamera = camera;
+	}
+
 	// code to attack a target (set by camera)
 	public void Attack(GameObject target) {
 
-		// subtract damage from target
-		target.transform.gameObject.GetComponent<PawnController> ().health = target.transform.gameObject.GetComponent<PawnController> ().health - attackDamage;
+		if (currentActions > 0) {
 
-		// decrement current action count
-		currentActions = currentActions - 1;
+			// subtract damage from target
+			target.transform.gameObject.GetComponent<PawnController> ().health = target.transform.gameObject.GetComponent<PawnController> ().health - attackDamage;
+
+			// check if object should be destroyed
+			if (target.transform.gameObject.GetComponent<PawnController> ().health <= 0) {
+				target.transform.gameObject.GetComponent<PawnController> ().Destroy ();
+			}
+
+			// decrement current action count
+			currentActions = currentActions - 1;
+		}
 	}
 
 	// code to self-destruct (if health reaches 0, or if chosen)
 	public void Destroy() {
+
+		// reset the tile info
+		currentTile.GetComponent<GroundScript> ().occupied = false;
+		currentTile.GetComponent<GroundScript> ().occupiedObject = null;
+
+		// delete this unit from the owning player's unit list
+		if (owningPlayer == 1) {
+			mainCamera.GetComponent<CameraControls>().levelInit.GetComponent<LevelInit>().player1.RemoveUnit (unitID);
+		} 
+		else {
+			mainCamera.GetComponent<CameraControls>().levelInit.GetComponent<LevelInit>().player2.RemoveUnit (unitID);
+		}
+
+		// delete this object
 		GameObject.Destroy (transform.gameObject);
 	}
 
@@ -105,13 +134,22 @@ public class PawnController : Pawn {
 							currentMoves = currentMoves -1;
 						
 							// set occupied for current, next tile
-
 							currentTile.GetComponent<GroundScript>().occupied = false;
+							currentTile.GetComponent<GroundScript>().occupiedObject = null;
 							nextTile.GetComponent<GroundScript>().occupied = true;
+							nextTile.GetComponent<GroundScript>().occupiedObject = transform.gameObject;
+
 							// set new currentTile
 							currentTile = nextTile;
 
 							return 0;
+						}
+					}
+					else {
+						// this space is occupied
+						if (nextTile.GetComponent<GroundScript>().occupiedObject.GetComponent<PawnController>().owningPlayer != owningPlayer) {
+							Attack (nextTile.GetComponent<GroundScript>().occupiedObject);
+							return 1;
 						}
 					}
 				}
