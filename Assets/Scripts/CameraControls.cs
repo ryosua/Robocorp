@@ -55,7 +55,7 @@ public class CameraControls : MonoBehaviour {
 		turn = 1;
 	}
 
-	// sets camera focus on end turn; for the given player, the camera flies to this object on their turn start
+	// sets camera focus on end turn for the given player, the camera flies to this object on their turn start
 	void SetBase(int playerID, GameObject baseObject) {
 		if (playerID == 1) {
 			player1Base = baseObject;
@@ -83,8 +83,7 @@ public class CameraControls : MonoBehaviour {
 			turn = 0;
 
 			// move camera to player 2's base
-			moveCoordinates = new Vector3(player2Base.transform.position.x, player2Base.transform.position.y, -10);
-			moveBool = true;
+			MoveTo (player2Base);
 			currentPlayer = 2;
 			playerText.text = "Player 2";
 			UIResourceUpdate();
@@ -96,42 +95,66 @@ public class CameraControls : MonoBehaviour {
 			turn = 1;
 
 			// move camera to player 1's base
-			moveCoordinates = new Vector3(player1Base.transform.position.x, player1Base.transform.position.y, -10);
-			moveBool = true;
+			MoveTo (player1Base);
 			currentPlayer = 1;
 			playerText.text = "Player 1";
 			UIResourceUpdate();
 		}
 	}
 
+	// function to freely move camera to a target
+	public void MoveTo(GameObject target) {
+		moveCoordinates = new Vector3(target.transform.position.x, target.transform.position.y, -10);
+		moveBool = true; 
+	}
+
 	// function to set up UI when a pawn is clicked; UIState = 0 if not initialized, 1 if initialized
-	void UIUpdatePawnInfo() {
+	void UIUpdatePawnInfo(GameObject target, int owned) {
 		// set color and correct numbers for moves/actions on UI
-		// check if the unit even has those
-		PawnController selectedUnit = selected.transform.gameObject.GetComponent<PawnController>();
 
 		// check if we have selected something
-		if (selected != null) {
+		if (target != null) {
+
+			// check if the unit even has a pawn controller
+			PawnController targetUnit = target.transform.gameObject.GetComponent<PawnController>();
+
+			if (owned == 1) {
 
 			// if it is movable, display moves and actions
-			if (selectedUnit.movable == true) {
+			if (targetUnit.movable == true) {
 
 				moveText.color = Color.black;
-				moveText.text = "Moves Remaining:\t" + selectedUnit.currentMoves.ToString ();
+				moveText.text = "Moves Remaining:\t" + targetUnit.currentMoves.ToString ();
 			}
 
 			// in all cases, display actions, health, and attack (even if 0)
 			actionText.color = Color.black;
-			actionText.text = "Actions Remaining:\t" + selectedUnit.currentActions.ToString ();
+			actionText.text = "Actions Remaining:\t" + targetUnit.currentActions.ToString ();
 
 			healthText.color = Color.black;
-			healthText.text = "Unit Health:\t\t" + selectedUnit.health.ToString ();
+			healthText.text = "Unit Health:\t\t" + targetUnit.health.ToString ();
 
 			attackText.color = Color.black;
-			attackText.text = "Attack Power:\t" + selectedUnit.attackDamage.ToString ();
+			attackText.text = "Attack Power:\t" + targetUnit.attackDamage.ToString ();
 
 			// activate actionPanel color
 			actionPanel.GetComponent<Image>().color = Color.red;
+			}
+			else {
+				healthText.color = Color.black;
+				healthText.text = "Unit Health:\t\t" + targetUnit.health.ToString ();
+
+				moveText.color = Color.grey;
+				moveText.text = "Moves Remaining:";
+				
+				actionText.color = Color.grey;
+				actionText.text = "Actions Remaining:";
+				
+				attackText.color = Color.grey;
+				attackText.text = "Attack Power:";
+
+				actionPanel.GetComponent<Image>().color = Color.black;
+			}
 		}
 	}
 
@@ -140,10 +163,10 @@ public class CameraControls : MonoBehaviour {
 		// assume no pawn is selected now
 		moveText.color = Color.grey;
 		moveText.text = "Moves Remaining:";
-
+		
 		actionText.color = Color.grey;
 		actionText.text = "Actions Remaining:";
-
+		
 		healthText.color = Color.grey;
 		healthText.text = "Unit Health:";
 		
@@ -170,8 +193,82 @@ public class CameraControls : MonoBehaviour {
 		goldText.text = "Gold:\t" + player.goldCount.ToString ();
 		oreText.text = "Ore:\t" + player.oreCount.ToString ();
 	}
+
+	// spawn an arbitrary pawn at spawnTileLocation. Spawns beside tile location (or not at all)
+	public int SpawnPawn(GameObject spawnPrefab, GameObject spawnTileLocation, int owningPlayer) {
+
+		// check if this tile exists
+		if (spawnTileLocation != null) {
+
+			GroundScript spawnTile = spawnTileLocation.GetComponent<GroundScript> ();
+
+			// check if this tile location is occupied (maybe a building)
+			if (spawnTile.occupied != true) {
+				Spawn (spawnPrefab, spawnTileLocation, owningPlayer);
+				return 0;
+			}
+
+			// if the left block of the spawn tile isn't null, spawn there
+			else if (spawnTile.left_block != null) {
+
+				// if it is not occupied, spawn
+				if (spawnTile.left_block.GetComponent<GroundScript> ().occupied != true) {
+					Spawn (spawnPrefab, spawnTileLocation, owningPlayer);
+					return 0;
+				}
+			}
+			// if the upper block of the spawn tile isn't null, spawn there
+			else if (spawnTile.up_block != null) {
+				
+				// if it is not occupied, spawn
+				if (spawnTile.up_block.GetComponent<GroundScript> ().occupied != true) {
+					Spawn (spawnPrefab, spawnTileLocation, owningPlayer);
+					return 0;
+				}
+			}
+			// if the right block of the spawn tile isn't null, spawn there
+			else if (spawnTile.right_block != null) {
+				
+				// if it is not occupied, spawn
+				if (spawnTile.right_block.GetComponent<GroundScript> ().occupied != true) {
+					Spawn (spawnPrefab, spawnTileLocation, owningPlayer);
+					return 0;
+				}
+			}
+			// if the lower block of the spawn tile isn't null, spawn there
+			else if (spawnTile.down_block != null) {
+				
+				// if it is not occupied, spawn
+				if (spawnTile.down_block.GetComponent<GroundScript> ().occupied != true) {
+					Spawn (spawnPrefab, spawnTileLocation, owningPlayer);
+					return 0;
+				}
+			}
+		}
+		// no valid spot to spawn
+		return -1;
+	}
+
+	// private spawn method to handle bookkeeping
+	void Spawn(GameObject spawnPrefab, GameObject spawnTileLocation, int owningPlayer) {
+
+		// instantiate the pawn, set it's tile, set it's owner, set the tile's occupancy
+		spawnPrefab = (GameObject)Instantiate (spawnPrefab, spawnTileLocation.transform.position, spawnTileLocation.transform.rotation);
+		spawnPrefab.BroadcastMessage("SetTile", spawnTileLocation);
+		spawnPrefab.BroadcastMessage ("SetOwner", owningPlayer);
+		spawnPrefab.BroadcastMessage ("SetCamera", transform.gameObject);
+		spawnPrefab.GetComponent<PawnController> ().currentTile.GetComponent<GroundScript> ().SetOccupant (spawnPrefab);
+		
+		// add settler to the owning player's unit list, set unit's unitID
+		if (owningPlayer == 1) {
+			spawnPrefab.GetComponent<PawnController>().unitID = levelInit.GetComponent<LevelInit>().player1.AddUnit(spawnPrefab);
+		}
+		else {
+			spawnPrefab.GetComponent<PawnController>().unitID = levelInit.GetComponent<LevelInit>().player2.AddUnit(spawnPrefab);
+		}
+	}
 	
-	// Update is called once per frame
+	// Update is called once per frame; here we handle selection, deselection, movement
 	void Update(){
 
 		mouseX = Input.mousePosition.x;
@@ -199,7 +296,12 @@ public class CameraControls : MonoBehaviour {
 
 						// update UI (flush it really quick in case we are going from one pawn to another
 						UIDeselectPawn();
-						UIUpdatePawnInfo();
+						UIUpdatePawnInfo(selected, 1);
+					}
+
+					// if it is an enemy player, show health
+					else {
+						UIUpdatePawnInfo (hit.transform.gameObject, 0);
 					}
 				}
 
@@ -226,7 +328,7 @@ public class CameraControls : MonoBehaviour {
 				// check if there is actually something selected
 				if(selected != null) {
 					// check if we are moving to an invalid block
-					if (!(hit.transform.gameObject.tag == ("MovementBlocker"))) {
+					if ((hit.transform.gameObject.tag != ("MovementBlocker"))) {
 
 						// move the pawn using that pawn's code
 						// determine direction with distance from selection
@@ -264,7 +366,7 @@ public class CameraControls : MonoBehaviour {
 							}
 						}
 						// update UI
-						UIUpdatePawnInfo();
+						UIUpdatePawnInfo(selected, 1);
 					}
 				}
 			}
@@ -284,7 +386,7 @@ public class CameraControls : MonoBehaviour {
 				}
 
 				// update UI
-				UIUpdatePawnInfo();
+				UIUpdatePawnInfo(selected, 1);
 			}
 		}
 
@@ -300,7 +402,7 @@ public class CameraControls : MonoBehaviour {
 				}
 
 				// update UI
-				UIUpdatePawnInfo();
+				UIUpdatePawnInfo(selected, 1);
 			}
 		}
 
@@ -316,7 +418,7 @@ public class CameraControls : MonoBehaviour {
 				}
 
 				// update UI
-				UIUpdatePawnInfo();
+				UIUpdatePawnInfo(selected, 1);
 			}
 		}
 
@@ -332,7 +434,7 @@ public class CameraControls : MonoBehaviour {
 				}
 
 				// update UI
-				UIUpdatePawnInfo();
+				UIUpdatePawnInfo(selected, 1);
 			}
 		}
 
