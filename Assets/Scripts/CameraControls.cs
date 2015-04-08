@@ -25,6 +25,13 @@ public class CameraControls : MonoBehaviour {
 	public Button endTurn;
 	public GameObject actionPanel;
 
+	// unit prefabs
+	public GameObject HeavyBotPrefab;
+	public GameObject MeleeBotPrefab;
+	public GameObject WorkerBotPrefab;
+	public GameObject RangedBotPrefab;
+	public GameObject BasePrefab;
+
 	// get level init object (for player lists, unit lists)
 	public GameObject levelInit;
 
