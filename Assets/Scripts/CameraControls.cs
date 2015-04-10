@@ -25,6 +25,13 @@ public class CameraControls : MonoBehaviour {
 	public Button endTurn;
 	public GameObject actionPanel;
 
+	// unit prefabs
+	public GameObject HeavyBotPrefab;
+	public GameObject MeleeBotPrefab;
+	public GameObject WorkerBotPrefab;
+	public GameObject RangedBotPrefab;
+	public GameObject BasePrefab;
+
 	// get level init object (for player lists, unit lists)
 	public GameObject levelInit;
 
@@ -116,29 +123,31 @@ public class CameraControls : MonoBehaviour {
 		if (target != null) {
 
 			// check if the unit even has a pawn controller
-			PawnController targetUnit = target.transform.gameObject.GetComponent<PawnController>();
+			PawnController targetUnit = target.GetComponent<PawnController>();
 
 			if (owned == 1) {
+				// if it is movable, display moves and actions
+				if (targetUnit.movable == true) {
 
-			// if it is movable, display moves and actions
-			if (targetUnit.movable == true) {
+					moveText.color = Color.black;
+					moveText.text = "Moves Remaining:\t" + targetUnit.currentMoves.ToString ();
+				}
 
-				moveText.color = Color.black;
-				moveText.text = "Moves Remaining:\t" + targetUnit.currentMoves.ToString ();
-			}
+				// in all cases, display actions, health, and attack (even if 0)
+				actionText.color = Color.black;
+				actionText.text = "Actions Remaining:\t" + targetUnit.currentActions.ToString ();
 
-			// in all cases, display actions, health, and attack (even if 0)
-			actionText.color = Color.black;
-			actionText.text = "Actions Remaining:\t" + targetUnit.currentActions.ToString ();
+				healthText.color = Color.black;
+				healthText.text = "Unit Health:\t\t" + targetUnit.health.ToString ();
 
-			healthText.color = Color.black;
-			healthText.text = "Unit Health:\t\t" + targetUnit.health.ToString ();
+				attackText.color = Color.black;
+				attackText.text = "Attack Power:\t" + targetUnit.attackDamage.ToString ();
 
-			attackText.color = Color.black;
-			attackText.text = "Attack Power:\t" + targetUnit.attackDamage.ToString ();
+				// activate actionPanel color
+				actionPanel.GetComponent<Image>().color = Color.red;
 
-			// activate actionPanel color
-			actionPanel.GetComponent<Image>().color = Color.red;
+				// Check unit type, build button for unit
+
 			}
 			else {
 				healthText.color = Color.black;

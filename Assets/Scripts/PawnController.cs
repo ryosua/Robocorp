@@ -15,6 +15,7 @@ public class PawnController : Pawn {
 	// number of owning player
 	public int owningPlayer;
 	public int unitID;
+	public string unitType;
 
 	// action stats
 	public int actionsPerTurn;
