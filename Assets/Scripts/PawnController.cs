@@ -168,6 +168,7 @@ public class PawnController : Pawn {
 		currentActions = actionsPerTurn;
 	}
 
+
 	// Use this for initialization
 	void Start () {
 		// set default coords

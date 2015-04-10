@@ -37,13 +37,62 @@ public class PlayerController {
 
 		GameObject currentUnit;
 
+
 		// while we aren't at the end of the list...
 		while (e.MoveNext()) {
 
 			// tell unit to take its turn
 			currentUnit = e.Current;
 			currentUnit.GetComponent<PawnController>().TakeTurn ();
+
+			GameObject currentTile = currentUnit.GetComponent<PawnController>().currentTile;
+		
+			string tileType = currentTile.GetComponent<GroundScript>().tileType;
+
+			//Debug.Log(tileType);
+
+			switch (tileType)
+			{
+			case "Oil1":
+				oilCount++;
+				break;
+
+			case "Oil2":
+				oilCount += 2;
+				break;
+
+			case "Oil3":
+				oilCount +=3;
+				break;
+
+			case "Ore1":
+				oreCount++;
+				break;
+
+			case "Ore2":
+				oreCount += 2;
+				break;
+
+			case "Ore3":
+				oreCount += 3;
+				break;
+
+			case "Gold1":
+				goldCount++;
+				break;
+
+			case "Gold2":
+				goldCount += 2;
+				break;
+
+			case "Gold3":
+				goldCount += 3;
+				break;
+
+			}
 		}
+
+		//Debug.Log (unitList.Count);
 	}
 
 	// function to add unit to player array
