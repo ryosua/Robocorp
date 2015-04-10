@@ -22,8 +22,12 @@ public class CameraControls : MonoBehaviour {
 	public Text oilText;
 	public Text goldText;
 	public Text oreText;
+	public Text lossText;
 	public Button endTurn;
+	public Button lossButton;
+	public Button buildButton;
 	public GameObject actionPanel;
+	public GameObject lossPanel;
 
 	// unit prefabs
 	public GameObject HeavyBotPrefab;
@@ -106,6 +110,21 @@ public class CameraControls : MonoBehaviour {
 			currentPlayer = 1;
 			playerText.text = "Player 1";
 			UIResourceUpdate();
+		}
+	}
+
+	// function to end game (given player number loses)
+	public void PlayerLoss(int playerNumber) {
+
+		// enable loss panel
+		lossPanel.SetActive (true);
+
+		// check who lost, set text accordingly
+		if (playerNumber == 1) {
+			lossText.text = "Player 2 Wins!";
+		}
+		else {
+			lossText.text = "Player 1 Wins!";
 		}
 	}
 
