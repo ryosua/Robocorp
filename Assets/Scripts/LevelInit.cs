@@ -113,6 +113,7 @@ public class LevelInit : MonoBehaviour {
 		settlerUnit1.BroadcastMessage ("SetOwner", 1);
 		settlerUnit1.BroadcastMessage ("SetCamera", mainCamera);
 		settlerUnit1.GetComponent<PawnController> ().currentTile.GetComponent<GroundScript> ().SetOccupant (settlerUnit1);
+		settlerUnit1.GetComponent<PawnController> ().SetPawnType (PawnType.SettlerBot);
 
 		// add settler to player1's unit list, set unit's unitID
 		settlerUnit1.GetComponent<PawnController>().unitID = player1.AddUnit(settlerUnit1);
@@ -126,6 +127,7 @@ public class LevelInit : MonoBehaviour {
 		settlerUnit2.BroadcastMessage ("SetOwner", 2);
 		settlerUnit2.BroadcastMessage ("SetCamera", mainCamera);
 		settlerUnit2.GetComponent<PawnController> ().currentTile.GetComponent<GroundScript> ().SetOccupant (settlerUnit2);
+		settlerUnit2.GetComponent<PawnController> ().SetPawnType (PawnType.SettlerBot);
 
 		// add settler to player2's unit list, set unit's unitID
 		settlerUnit2.GetComponent<PawnController>().unitID = player2.AddUnit(settlerUnit2);

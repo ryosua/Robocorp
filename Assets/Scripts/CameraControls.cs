@@ -204,7 +204,7 @@ public class CameraControls : MonoBehaviour {
 	}
 
 	// spawn an arbitrary pawn at spawnTileLocation. Spawns beside tile location (or not at all)
-	public int SpawnPawn(GameObject spawnPrefab, GameObject spawnTileLocation, int owningPlayer) {
+	public int SpawnPawn(GameObject spawnPrefab, GameObject spawnTileLocation, int owningPlayer, PawnType pawnType) {
 
 		// check if this tile exists
 		if (spawnTileLocation != null) {
