@@ -15,7 +15,7 @@ public class PawnController : Pawn {
 	// number of owning player
 	public int owningPlayer;
 	public int unitID;
-	public PawnType pawnType;
+	private UnitType unitType;
 
 	// action stats
 	public int actionsPerTurn;
@@ -40,12 +40,12 @@ public class PawnController : Pawn {
 		owningPlayer = playerNumber;
 	}
 
-	public void SetPawnType(PawnType pawnType) {
-		this.pawnType = pawnType;
+	public void SetUnitType(UnitType unitType) {
+		this.unitType = unitType;
 	}
 
-	public PawnType GetPawnType() {
-		return pawnType;
+	public UnitType GetUnitType() {
+		return unitType;
 	}
 
 	// function to set initial tile

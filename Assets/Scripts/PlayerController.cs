@@ -79,7 +79,7 @@ public class PlayerController {
 			if (e.Current.GetComponent<PawnController>().unitID == unit_id) {
 
 				// check if this player just lost
-				if (e.Current.GetComponent<PawnController>().unitType == "Base") {
+				if (e.Current.GetComponent<PawnController>().GetUnitType() == UnitType.Base) {
 					mainCamera.GetComponent<CameraControls>().PlayerLoss(playerNumber);
 				}
 
