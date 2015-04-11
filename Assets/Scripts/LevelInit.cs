@@ -103,9 +103,11 @@ public class LevelInit : MonoBehaviour {
 		// setup players
 		player1 = new PlayerController();
 		player1.InitPlayer (1, startOre, startGold, startOil);
+		player1.GetCamera (mainCamera);
 		
 		player2 = new PlayerController();
 		player2.InitPlayer (2, startOre, startGold, startOil);
+		player2.GetCamera (mainCamera);
 
 		// spawn player1's settler on bottom of map
 		settlerUnit1 = (GameObject)Instantiate (settlerUnit1, mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth/8)].transform.position, transform.rotation);
