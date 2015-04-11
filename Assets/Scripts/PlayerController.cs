@@ -10,6 +10,7 @@ public class PlayerController {
 	public LinkedList<GameObject> unitList;
 	LinkedList<GameObject>.Enumerator e;
 	public int unitCount;
+	public GameObject mainCamera;
 
 	public int oreCount;
 	public int goldCount;
@@ -95,6 +96,11 @@ public class PlayerController {
 		//Debug.Log (unitList.Count);
 	}
 
+	// getter for camera
+	public void GetCamera(GameObject camera) {
+		mainCamera = camera;
+	}
+
 	// function to add unit to player array
 	// MAKE SURE THAT EVERYTHING ADDED HAS A TakeTurn FUNCTION!!
 	public int AddUnit(GameObject unit) {
@@ -109,6 +115,7 @@ public class PlayerController {
 		return unitCount;
 	}
 
+	// remove unit from the player array
 	public void RemoveUnit(int unit_id) {
 
 		// reset the enumerator
@@ -120,8 +127,18 @@ public class PlayerController {
 			// get the id of a given list object. If it matches...
 			if (e.Current.GetComponent<PawnController>().unitID == unit_id) {
 
+				// check if this player just lost
+				if (e.Current.GetComponent<PawnController>().GetUnitType() == UnitType.Base) {
+					mainCamera.GetComponent<CameraControls>().PlayerLoss(playerNumber);
+				}
+
 				// destroy the object
 				unitList.Remove (e.Current);
+
+				// does the player have any units left?
+				if (unitList.Count == 0) {
+					mainCamera.GetComponent<CameraControls>().PlayerLoss(playerNumber);
+				}
 
 				// break from while loop
 				break;

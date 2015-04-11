@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class LevelInit : MonoBehaviour {
@@ -196,9 +196,11 @@ public class LevelInit : MonoBehaviour {
 		// setup players
 		player1 = new PlayerController();
 		player1.InitPlayer (1, startOre, startGold, startOil);
+		player1.GetCamera (mainCamera);
 		
 		player2 = new PlayerController();
 		player2.InitPlayer (2, startOre, startGold, startOil);
+		player2.GetCamera (mainCamera);
 
 		// spawn player1's settler on bottom of map
 		settlerUnit1 = (GameObject)Instantiate (settlerUnit1, mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth/8)].transform.position, transform.rotation);
@@ -206,6 +208,7 @@ public class LevelInit : MonoBehaviour {
 		settlerUnit1.BroadcastMessage ("SetOwner", 1);
 		settlerUnit1.BroadcastMessage ("SetCamera", mainCamera);
 		settlerUnit1.GetComponent<PawnController> ().currentTile.GetComponent<GroundScript> ().SetOccupant (settlerUnit1);
+		settlerUnit1.GetComponent<PawnController> ().SetUnitType (UnitType.SettlerBot);
 
 		// add settler to player1's unit list, set unit's unitID
 		settlerUnit1.GetComponent<PawnController>().unitID = player1.AddUnit(settlerUnit1);
@@ -219,6 +222,7 @@ public class LevelInit : MonoBehaviour {
 		settlerUnit2.BroadcastMessage ("SetOwner", 2);
 		settlerUnit2.BroadcastMessage ("SetCamera", mainCamera);
 		settlerUnit2.GetComponent<PawnController> ().currentTile.GetComponent<GroundScript> ().SetOccupant (settlerUnit2);
+		settlerUnit2.GetComponent<PawnController> ().SetUnitType (UnitType.SettlerBot);
 
 		// add settler to player2's unit list, set unit's unitID
 		settlerUnit2.GetComponent<PawnController>().unitID = player2.AddUnit(settlerUnit2);

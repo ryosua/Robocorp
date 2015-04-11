@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
@@ -7,6 +7,7 @@ public class CameraControls : MonoBehaviour {
 	RaycastHit2D hit;
 	public GameObject hitObject;
 	public GameObject selected;
+	public GameObject lastSelected;
 	public GameObject selectorParticle;
 	public GameObject CameraNWEdge;
 	public GameObject CameraSEEdge;
@@ -22,10 +23,15 @@ public class CameraControls : MonoBehaviour {
 	public Text oilText;
 	public Text goldText;
 	public Text oreText;
+	public Text lossText;
 	public Button endTurn;
+	public Button lossButton;
+	public Button buildButton;
 	public GameObject actionPanel;
+	public GameObject lossPanel;
 
 	// unit prefabs
+	public GameObject SettlerBotPrefab;
 	public GameObject HeavyBotPrefab;
 	public GameObject MeleeBotPrefab;
 	public GameObject WorkerBotPrefab;
@@ -106,6 +112,21 @@ public class CameraControls : MonoBehaviour {
 			currentPlayer = 1;
 			playerText.text = "Player 1";
 			UIResourceUpdate();
+		}
+	}
+
+	// function to end game (given player number loses)
+	public void PlayerLoss(int playerNumber) {
+
+		// enable loss panel
+		lossPanel.SetActive (true);
+
+		// check who lost, set text accordingly
+		if (playerNumber == 1) {
+			lossText.text = "Player 2 Wins!";
+		}
+		else {
+			lossText.text = "Player 1 Wins!";
 		}
 	}
 
@@ -204,7 +225,7 @@ public class CameraControls : MonoBehaviour {
 	}
 
 	// spawn an arbitrary pawn at spawnTileLocation. Spawns beside tile location (or not at all)
-	public int SpawnPawn(GameObject spawnPrefab, GameObject spawnTileLocation, int owningPlayer) {
+	public int SpawnPawn(GameObject spawnPrefab, GameObject spawnTileLocation, int owningPlayer, UnitType pawnType) {
 
 		// check if this tile exists
 		if (spawnTileLocation != null) {
@@ -316,6 +337,11 @@ public class CameraControls : MonoBehaviour {
 
 				// deselection code
 				else {
+					// Save the last pawn selected so when the player clicks the build button we know which panels to show.
+					if (selected != null) {
+						lastSelected = selected;
+					}
+
 					// deselect pawn, move selection particle off screen
 					selected = null;
 					selectorParticle.BroadcastMessage ("FlashTo", CameraSEEdge.transform.gameObject);
