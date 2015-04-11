@@ -7,6 +7,7 @@ public class CameraControls : MonoBehaviour {
 	RaycastHit2D hit;
 	public GameObject hitObject;
 	public GameObject selected;
+	public GameObject lastSelected;
 	public GameObject selectorParticle;
 	public GameObject CameraNWEdge;
 	public GameObject CameraSEEdge;
@@ -26,6 +27,7 @@ public class CameraControls : MonoBehaviour {
 	public GameObject actionPanel;
 
 	// unit prefabs
+	public GameObject SettlerBotPrefab;
 	public GameObject HeavyBotPrefab;
 	public GameObject MeleeBotPrefab;
 	public GameObject WorkerBotPrefab;
@@ -316,6 +318,11 @@ public class CameraControls : MonoBehaviour {
 
 				// deselection code
 				else {
+					// Save the last pawn selected so when the player clicks the build button we know which panels to show.
+					if (selected != null) {
+						lastSelected = selected;
+					}
+
 					// deselect pawn, move selection particle off screen
 					selected = null;
 					selectorParticle.BroadcastMessage ("FlashTo", CameraSEEdge.transform.gameObject);

@@ -4,9 +4,11 @@ using System.Collections;
 public class CloseBuildMenu : MonoBehaviour {
 
 	public GameObject buildMenu;
+	public GameObject mainCamera;
 
 	public void OnClick () {
 		buildMenu.SetActive (false);
+		CloseUnitPanel (getSelectedPawnType());
 	}
 
 	// Use this for initialization
@@ -17,5 +19,38 @@ public class CloseBuildMenu : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
+	}
+
+	private PawnType getSelectedPawnType() {
+		PawnType type;
+		
+		CameraControls camera = mainCamera.GetComponent<CameraControls> ();
+		GameObject lastSelected = camera.lastSelected;
+		PawnController pawn = lastSelected.GetComponent<PawnController> ();
+		type = pawn.GetPawnType ();
+		
+		return type;
+	}
+
+	private void CloseUnitPanel (PawnType pawnType) {
+		switch (pawnType) {
+			
+		case PawnType.SettlerBot:
+			// Open Settler Bot Panel
+			print("Closing settler bot panel.");
+			break;
+		case PawnType.WorkerBot:
+			// Open Worker Bot Panel
+			break;
+		case PawnType.MeleeBot:
+			// Open Melee Bot Panel
+			break;
+		case PawnType.HeavyBot:
+			// Open Heavy Bot Panel
+			break;
+		default:
+			// The button should not be shown here becuase the selected unit does not have any corresponding actions.
+			break;
+		}
 	}
 }

@@ -44,6 +44,10 @@ public class PawnController : Pawn {
 		this.pawnType = pawnType;
 	}
 
+	public PawnType GetPawnType() {
+		return pawnType;
+	}
+
 	// function to set initial tile
 	public void SetTile(GameObject tile) {
 		currentTile = tile;
