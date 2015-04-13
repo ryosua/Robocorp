@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
+using System.Collections.Generic;
 
 public class CameraControls : MonoBehaviour {
 
@@ -41,6 +41,14 @@ public class CameraControls : MonoBehaviour {
 	// get level init object (for player lists, unit lists)
 	public GameObject levelInit;
 
+	// Map the UnitType prefabs to 
+	Dictionary<UnitType, GameObject> UnitTypeToPrefab = new Dictionary<UnitType, GameObject>();
+	UnitTypeToPrefab.Add (UnitType.SettlerBot, SettlerBotPrefab);
+	UnitTypeToPrefab.Add (UnitType.HeavyBot, HeavyBotPrefab);
+	UnitTypeToPrefab.Add (UnitType.MeleeBot, MeleeBotPrefab);
+	UnitTypeToPrefab.Add (UnitType.MeleeBot, WorkerBotPrefab);
+	UnitTypeToPrefab.Add (UnitType.Base, BasePrefab);
+
 	// turn bool
 	int turn;
 
@@ -60,6 +68,9 @@ public class CameraControls : MonoBehaviour {
 	// keep track of current player
 	public int currentPlayer;
 
+	// When a player buys a unit it is stored here until it is placed.
+	public UnitType UnitToPlace { get; set; }
+	
 	// Use this for initialization
 	void Start () {
 		currentPlayer = 1;
@@ -362,41 +373,53 @@ public class CameraControls : MonoBehaviour {
 					// check if we are moving to an invalid block
 					if ((hit.transform.gameObject.tag != ("MovementBlocker"))) {
 
-						// move the pawn using that pawn's code
-						// determine direction with distance from selection
-						float xDist = hit.transform.position.x - selected.transform.position.x;
-						float yDist = hit.transform.position.y - selected.transform.position.y;
-
-						if (Mathf.Abs (xDist) >= Mathf.Abs (yDist)) {
-
-							if (xDist > 0) {
-								if (selected.GetComponent<PawnController>().MoveTo(4) == 0) {
-									moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
-									moveBool = true;
+						// If there is no pawn to place
+						if (UnitToPlace != null) {
+							// move the pawn using that pawn's code
+							// determine direction with distance from selection
+							float xDist = hit.transform.position.x - selected.transform.position.x;
+							float yDist = hit.transform.position.y - selected.transform.position.y;
+							
+							if (Mathf.Abs (xDist) >= Mathf.Abs (yDist)) {
+								
+								if (xDist > 0) {
+									if (selected.GetComponent<PawnController>().MoveTo(4) == 0) {
+										moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
+										moveBool = true;
+									}
+								}
+								else {
+									if (selected.GetComponent<PawnController>().MoveTo(3) == 0) {
+										moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
+										moveBool = true;
+									}
 								}
 							}
 							else {
-								if (selected.GetComponent<PawnController>().MoveTo(3) == 0) {
-									moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
-									moveBool = true;
+								
+								if (yDist > 0) {
+									if (selected.GetComponent<PawnController>().MoveTo(1) == 0) {
+										moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
+										moveBool = true;
+									}
+								}
+								else {
+									if (selected.GetComponent<PawnController>().MoveTo(2) == 0) {
+										moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
+										moveBool = true;
+									}
 								}
 							}
 						}
 						else {
-							
-							if (yDist > 0) {
-								if (selected.GetComponent<PawnController>().MoveTo(1) == 0) {
-									moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
-									moveBool = true;
-								}
-							}
-							else {
-								if (selected.GetComponent<PawnController>().MoveTo(2) == 0) {
-									moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);;
-									moveBool = true;
-								}
-							}
+							// Spawn the unit that was purchased.
+							moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
+							selected = SpawnPawn (UnitTypeToPrefab[UnitToPlace], moveCoordinates, currentPlayer, UnitToPlace);
+
+							// The unit has been placed.
+							UnitToPlace = null;
 						}
+
 						// update UI
 						UIUpdatePawnInfo(selected, 1);
 					}

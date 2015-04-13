@@ -3,6 +3,23 @@ using System.Collections;
 
 public class BuildController : MonoBehaviour {
 
+
+	public CameraControls cameraControls;
+	public CloseBuildMenu closeScript;
+
+	public void OnBuildBaseBotClick () {
+
+		UnitType unitType = UnitType.Base;
+
+		// Close build menu
+		closeScript.CloseUnitPanel (unitType);
+
+		// Have the user place the character
+		cameraControls.UnitToPlace (unitType);
+
+		print ("Base built");
+	}
+
 	public void OnBuySettlerBotClick () {
 		// Subtract the cost of the purchase
 		// Close build menu
