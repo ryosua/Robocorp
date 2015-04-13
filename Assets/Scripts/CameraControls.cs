@@ -44,8 +44,12 @@ public class CameraControls : MonoBehaviour {
 	// turn bool
 	int turn;
 
-	// camera move bool
+	// camera move values
 	bool moveBool;
+	int cameraMin;
+	int cameraMax;
+	float scrollValue;
+	float lastScrollValue;
 
 	// vector for movement target (always lerps here)
 	public Vector3 moveCoordinates;
@@ -53,6 +57,7 @@ public class CameraControls : MonoBehaviour {
 	// mouse location values
 	public float mouseX;
 	public float mouseY;
+	public float mouseZ;
 
 	// bool to stop camera movement
 	public bool paused;
@@ -66,6 +71,11 @@ public class CameraControls : MonoBehaviour {
 		moveBool = false;
 		paused = false;
 		turn = 1;
+
+		cameraMax = 10;
+		cameraMin = 1;
+		lastScrollValue = 0F;
+		scrollValue = 0F;
 	}
 
 	// sets camera focus on end turn for the given player, the camera flies to this object on their turn start
@@ -305,6 +315,7 @@ public class CameraControls : MonoBehaviour {
 
 		mouseX = Input.mousePosition.x;
 		mouseY = Input.mousePosition.y;
+		mouseZ = Input.mousePosition.z;
 
 		// if we left click in the camera, select the pawn (if selectable)
 		if (Input.GetMouseButtonDown (0)) {
@@ -516,5 +527,18 @@ public class CameraControls : MonoBehaviour {
 				moveBool = false;
 			}
 		}
+
+		if ((scrollValue = Input.GetAxis("Mouse ScrollWheel")) != 0) // forward
+		{
+			if (scrollValue > 0) {
+				Camera.main.orthographicSize--;
+			}
+			else {
+				Camera.main.orthographicSize++;
+			}
+			lastScrollValue = Input.GetAxis ("Mouse ScrollWheel");
+		}
+		
+		Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, cameraMin, cameraMax );
 	}
 }
