@@ -225,7 +225,7 @@ public class CameraControls : MonoBehaviour {
 	}
 
 	// spawn an arbitrary pawn at spawnTileLocation. Spawns beside tile location (or not at all)
-	public int SpawnPawn(GameObject spawnPrefab, GameObject spawnTileLocation, int owningPlayer, UnitType pawnType) {
+	public GameObject SpawnPawn(GameObject spawnPrefab, GameObject spawnTileLocation, int owningPlayer, UnitType pawnType) {
 
 		// check if this tile exists
 		if (spawnTileLocation != null) {
@@ -234,8 +234,7 @@ public class CameraControls : MonoBehaviour {
 
 			// check if this tile location is occupied (maybe a building)
 			if (spawnTile.occupied != true) {
-				Spawn (spawnPrefab, spawnTileLocation, owningPlayer);
-				return 0;
+				return Spawn (spawnPrefab, spawnTileLocation, owningPlayer);;
 			}
 
 			// if the left block of the spawn tile isn't null, spawn there
@@ -243,8 +242,7 @@ public class CameraControls : MonoBehaviour {
 
 				// if it is not occupied, spawn
 				if (spawnTile.left_block.GetComponent<GroundScript> ().occupied != true) {
-					Spawn (spawnPrefab, spawnTileLocation, owningPlayer);
-					return 0;
+					return Spawn (spawnPrefab, spawnTileLocation, owningPlayer);
 				}
 			}
 			// if the upper block of the spawn tile isn't null, spawn there
@@ -252,8 +250,7 @@ public class CameraControls : MonoBehaviour {
 				
 				// if it is not occupied, spawn
 				if (spawnTile.up_block.GetComponent<GroundScript> ().occupied != true) {
-					Spawn (spawnPrefab, spawnTileLocation, owningPlayer);
-					return 0;
+					return Spawn (spawnPrefab, spawnTileLocation, owningPlayer);
 				}
 			}
 			// if the right block of the spawn tile isn't null, spawn there
@@ -261,8 +258,7 @@ public class CameraControls : MonoBehaviour {
 				
 				// if it is not occupied, spawn
 				if (spawnTile.right_block.GetComponent<GroundScript> ().occupied != true) {
-					Spawn (spawnPrefab, spawnTileLocation, owningPlayer);
-					return 0;
+					return Spawn (spawnPrefab, spawnTileLocation, owningPlayer);
 				}
 			}
 			// if the lower block of the spawn tile isn't null, spawn there
@@ -270,17 +266,16 @@ public class CameraControls : MonoBehaviour {
 				
 				// if it is not occupied, spawn
 				if (spawnTile.down_block.GetComponent<GroundScript> ().occupied != true) {
-					Spawn (spawnPrefab, spawnTileLocation, owningPlayer);
-					return 0;
+					return Spawn (spawnPrefab, spawnTileLocation, owningPlayer);
 				}
 			}
 		}
 		// no valid spot to spawn
-		return -1;
+		return null;
 	}
 
 	// private spawn method to handle bookkeeping
-	void Spawn(GameObject spawnPrefab, GameObject spawnTileLocation, int owningPlayer) {
+	GameObject Spawn(GameObject spawnPrefab, GameObject spawnTileLocation, int owningPlayer) {
 
 		// instantiate the pawn, set it's tile, set it's owner, set the tile's occupancy
 		spawnPrefab = (GameObject)Instantiate (spawnPrefab, spawnTileLocation.transform.position, spawnTileLocation.transform.rotation);
@@ -296,6 +291,8 @@ public class CameraControls : MonoBehaviour {
 		else {
 			spawnPrefab.GetComponent<PawnController>().unitID = levelInit.GetComponent<LevelInit>().player2.AddUnit(spawnPrefab);
 		}
+
+		return spawnPrefab;
 	}
 	
 	// Update is called once per frame; here we handle selection, deselection, movement
