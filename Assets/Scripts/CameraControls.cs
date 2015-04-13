@@ -41,14 +41,6 @@ public class CameraControls : MonoBehaviour {
 	// get level init object (for player lists, unit lists)
 	public GameObject levelInit;
 
-	// Map the UnitType prefabs to 
-	Dictionary<UnitType, GameObject> UnitTypeToPrefab = new Dictionary<UnitType, GameObject>();
-	UnitTypeToPrefab.Add (UnitType.SettlerBot, SettlerBotPrefab);
-	UnitTypeToPrefab.Add (UnitType.HeavyBot, HeavyBotPrefab);
-	UnitTypeToPrefab.Add (UnitType.MeleeBot, MeleeBotPrefab);
-	UnitTypeToPrefab.Add (UnitType.MeleeBot, WorkerBotPrefab);
-	UnitTypeToPrefab.Add (UnitType.Base, BasePrefab);
-
 	// turn bool
 	int turn;
 
@@ -70,9 +62,10 @@ public class CameraControls : MonoBehaviour {
 
 	// When a player buys a unit it is stored here until it is placed.
 	public UnitType UnitToPlace { get; set; }
-	
+		
 	// Use this for initialization
 	void Start () {
+		UnitToPlace = UnitType.None;
 		currentPlayer = 1;
 		moveBool = false;
 		paused = false;
@@ -236,7 +229,7 @@ public class CameraControls : MonoBehaviour {
 	}
 
 	// spawn an arbitrary pawn at spawnTileLocation. Spawns beside tile location (or not at all)
-	public GameObject SpawnPawn(GameObject spawnPrefab, GameObject spawnTileLocation, int owningPlayer, UnitType pawnType) {
+	public GameObject SpawnPawn(GameObject spawnPrefab, GameObject spawnTileLocation, int owningPlayer, UnitType unitType) {
 
 		// check if this tile exists
 		if (spawnTileLocation != null) {
@@ -245,7 +238,7 @@ public class CameraControls : MonoBehaviour {
 
 			// check if this tile location is occupied (maybe a building)
 			if (spawnTile.occupied != true) {
-				return Spawn (spawnPrefab, spawnTileLocation, owningPlayer);;
+				return Spawn (spawnPrefab, spawnTileLocation, owningPlayer, unitType);
 			}
 
 			// if the left block of the spawn tile isn't null, spawn there
@@ -253,7 +246,7 @@ public class CameraControls : MonoBehaviour {
 
 				// if it is not occupied, spawn
 				if (spawnTile.left_block.GetComponent<GroundScript> ().occupied != true) {
-					return Spawn (spawnPrefab, spawnTileLocation, owningPlayer);
+					return Spawn (spawnPrefab, spawnTileLocation, owningPlayer, unitType);
 				}
 			}
 			// if the upper block of the spawn tile isn't null, spawn there
@@ -261,7 +254,7 @@ public class CameraControls : MonoBehaviour {
 				
 				// if it is not occupied, spawn
 				if (spawnTile.up_block.GetComponent<GroundScript> ().occupied != true) {
-					return Spawn (spawnPrefab, spawnTileLocation, owningPlayer);
+					return Spawn (spawnPrefab, spawnTileLocation, owningPlayer, unitType);
 				}
 			}
 			// if the right block of the spawn tile isn't null, spawn there
@@ -269,7 +262,7 @@ public class CameraControls : MonoBehaviour {
 				
 				// if it is not occupied, spawn
 				if (spawnTile.right_block.GetComponent<GroundScript> ().occupied != true) {
-					return Spawn (spawnPrefab, spawnTileLocation, owningPlayer);
+					return Spawn (spawnPrefab, spawnTileLocation, owningPlayer, unitType);
 				}
 			}
 			// if the lower block of the spawn tile isn't null, spawn there
@@ -277,7 +270,7 @@ public class CameraControls : MonoBehaviour {
 				
 				// if it is not occupied, spawn
 				if (spawnTile.down_block.GetComponent<GroundScript> ().occupied != true) {
-					return Spawn (spawnPrefab, spawnTileLocation, owningPlayer);
+					return Spawn (spawnPrefab, spawnTileLocation, owningPlayer, unitType);
 				}
 			}
 		}
@@ -286,7 +279,7 @@ public class CameraControls : MonoBehaviour {
 	}
 
 	// private spawn method to handle bookkeeping
-	GameObject Spawn(GameObject spawnPrefab, GameObject spawnTileLocation, int owningPlayer) {
+	GameObject Spawn(GameObject spawnPrefab, GameObject spawnTileLocation, int owningPlayer, UnitType unitType) {
 
 		// instantiate the pawn, set it's tile, set it's owner, set the tile's occupancy
 		spawnPrefab = (GameObject)Instantiate (spawnPrefab, spawnTileLocation.transform.position, spawnTileLocation.transform.rotation);
@@ -302,6 +295,8 @@ public class CameraControls : MonoBehaviour {
 		else {
 			spawnPrefab.GetComponent<PawnController>().unitID = levelInit.GetComponent<LevelInit>().player2.AddUnit(spawnPrefab);
 		}
+
+		spawnPrefab.GetComponent<PawnController> ().SetUnitType (unitType);
 
 		return spawnPrefab;
 	}
@@ -374,7 +369,7 @@ public class CameraControls : MonoBehaviour {
 					if ((hit.transform.gameObject.tag != ("MovementBlocker"))) {
 
 						// If there is no pawn to place
-						if (UnitToPlace != null) {
+						if (UnitToPlace == UnitType.None) {
 							// move the pawn using that pawn's code
 							// determine direction with distance from selection
 							float xDist = hit.transform.position.x - selected.transform.position.x;
@@ -411,13 +406,37 @@ public class CameraControls : MonoBehaviour {
 								}
 							}
 						}
-						else {
+						else if (UnitToPlace != UnitType.None) {
 							// Spawn the unit that was purchased.
-							moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
-							selected = SpawnPawn (UnitTypeToPrefab[UnitToPlace], moveCoordinates, currentPlayer, UnitToPlace);
+
+							//TODO: Fix this.
+							GameObject spawnLocation = null;
+
+							switch (UnitToPlace) {
+							
+								case UnitType.Base: 
+									selected = SpawnPawn (BasePrefab, spawnLocation, currentPlayer, UnitToPlace);
+									break;
+								case UnitType.SettlerBot: 
+									selected = SpawnPawn (SettlerBotPrefab, spawnLocation, currentPlayer, UnitToPlace);
+									break;
+								case UnitType.WorkerBot:
+									selected = SpawnPawn (WorkerBotPrefab, spawnLocation, currentPlayer, UnitToPlace);
+									break;
+								case UnitType.MeleeBot:
+									selected = SpawnPawn (MeleeBotPrefab, spawnLocation, currentPlayer, UnitToPlace);
+									break;
+								case UnitType.HeavyBot:
+									selected = SpawnPawn (HeavyBotPrefab, spawnLocation, currentPlayer, UnitToPlace);
+									break;
+								default:
+									throw new UnityException("Built a unit with an unsupported UnitType");
+									//break;
+							}
+
 
 							// The unit has been placed.
-							UnitToPlace = null;
+							UnitToPlace = UnitType.None;
 						}
 
 						// update UI

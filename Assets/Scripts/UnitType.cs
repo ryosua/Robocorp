@@ -8,5 +8,7 @@
 
 	WorkerBot,
 
-	Base
+	Base,
+
+	None
 }
