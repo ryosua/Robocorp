@@ -170,6 +170,8 @@ public class CameraControls : MonoBehaviour {
 				// Check unit type, build button for unit
 
 			}
+
+			// handle case of a player clicking on someone else's unit
 			else {
 				healthText.color = Color.black;
 				healthText.text = "Unit Health:\t\t" + targetUnit.health.ToString ();
@@ -307,47 +309,51 @@ public class CameraControls : MonoBehaviour {
 		// if we left click in the camera, select the pawn (if selectable)
 		if (Input.GetMouseButtonDown (0)) {
 
-			// cast a ray to see what was clicked
-			hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint (Input.mousePosition), Vector2.zero);
+			// don't record clicks on the UI
+			if (mouseY > 60) {
+
+				// cast a ray to see what was clicked
+				hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint (Input.mousePosition), Vector2.zero);
 			
-			if (hit.collider != null) {
-				if ((hit.transform.gameObject.tag == "Selectable") || (hit.transform.gameObject.tag == "Selectable and Movable")) {
+				if (hit.collider != null) {
+					if ((hit.transform.gameObject.tag == "Selectable") || (hit.transform.gameObject.tag == "Selectable and Movable")) {
 
-					// make sure the current player owns this pawn
-					if (hit.transform.gameObject.GetComponent<PawnController>().owningPlayer == currentPlayer) {
+						// make sure the current player owns this pawn
+						if (hit.transform.gameObject.GetComponent<PawnController>().owningPlayer == currentPlayer) {
 
-						// update selection
-						selected = hit.transform.gameObject;
-						selectorParticle.GetComponent<ParticleBase>().selectedPawn = selected;
+							// update selection
+							selected = hit.transform.gameObject;
+							selectorParticle.GetComponent<ParticleBase>().selectedPawn = selected;
 
-						// move selection particle
-						selectorParticle.BroadcastMessage ("FlashTo", selected.transform.gameObject);
-						selectorParticle.BroadcastMessage ("StartParticle");
+							// move selection particle
+							selectorParticle.BroadcastMessage ("FlashTo", selected.transform.gameObject);
+							selectorParticle.BroadcastMessage ("StartParticle");
 
-						// update UI (flush it really quick in case we are going from one pawn to another
-						UIDeselectPawn();
-						UIUpdatePawnInfo(selected, 1);
+							// update UI (flush it really quick in case we are going from one pawn to another
+							UIDeselectPawn();
+							UIUpdatePawnInfo(selected, 1);
+						}
+
+						// if it is an enemy player, show health
+						else {
+							UIUpdatePawnInfo (hit.transform.gameObject, 0);
+						}
 					}
 
-					// if it is an enemy player, show health
+					// deselection code
 					else {
-						UIUpdatePawnInfo (hit.transform.gameObject, 0);
+						// Save the last pawn selected so when the player clicks the build button we know which panels to show.
+						if (selected != null) {
+							lastSelected = selected;
+						}
+
+						// deselect pawn, move selection particle off screen
+						selected = null;
+						selectorParticle.BroadcastMessage ("FlashTo", CameraSEEdge.transform.gameObject);
+
+						// update UI
+						UIDeselectPawn();
 					}
-				}
-
-				// deselection code
-				else {
-					// Save the last pawn selected so when the player clicks the build button we know which panels to show.
-					if (selected != null) {
-						lastSelected = selected;
-					}
-
-					// deselect pawn, move selection particle off screen
-					selected = null;
-					selectorParticle.BroadcastMessage ("FlashTo", CameraSEEdge.transform.gameObject);
-
-					// update UI
-					UIDeselectPawn();
 				}
 			}
 		}
