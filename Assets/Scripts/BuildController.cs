@@ -80,12 +80,17 @@ public class BuildController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+		
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+		if (HeadquartersPanel == null) {
+			print ("null");
+		}
+		else {
+			print ("not null");
+		}
 	}
 
 	public void ShowUnitPanel (UnitType unitType) {
