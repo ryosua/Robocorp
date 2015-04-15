@@ -4,15 +4,16 @@ using System.Collections;
 public class OpenBuildMenu : MonoBehaviour {
 
 	public GameObject MainCamera;
+	public BuildController cntl;
 	
 	public void OnClick () {
-		BuildController cntl = MainCamera.GetComponent<BuildController> ();
 		cntl.SetBuildMenuVisible (true);
 		cntl.ShowUnitPanel (cntl.getSelectedPawnType());
 	}
 	
 	// Use this for initialization
 	void Start () {
+		cntl = MainCamera.GetComponent<BuildController> ();
 		
 	}
 	

@@ -7,6 +7,12 @@ public class BuildController : MonoBehaviour {
 	public GameObject HeadquartersPanel;
 	public GameObject MainCamera;
 
+	// vector for movement target (always lerps here)
+	public Vector3 moveCoordinates;
+	Vector3 oldPos;
+	bool moveBool;
+	float speed;
+
 	public void OnBuildBaseBotClick () {
 
 		UnitType unitType = UnitType.Base;
@@ -80,21 +86,33 @@ public class BuildController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		speed = 10F;
+
+		moveCoordinates = new Vector3 (transform.position.x, transform.position.y, transform.position.z);
+		moveBool = false;
 		
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (HeadquartersPanel == null) {
-			print ("null");
-		}
-		else {
-			print ("not null");
+
+		if (moveBool == true) {
+
+			// move pawn to given location using Lerp and Update
+			BuildPanel.transform.position = Vector3.Lerp (transform.position, moveCoordinates, speed * Time.deltaTime);
+
+			if (oldPos == moveCoordinates) {
+				moveBool = false;
+			}
 		}
 	}
 
 	public void ShowUnitPanel (UnitType unitType) {
 		print ("Showing unit panel." + unitType);
+
+		// clear panel initially
+		HeadquartersPanel.SetActive (false);
+
 		switch (unitType) {
 			
 			case UnitType.Base:
@@ -128,8 +146,6 @@ public class BuildController : MonoBehaviour {
 		case UnitType.Base:
 			// Close Settler Bot Panel
 			print("Closing headquarters panel.");
-			print (HeadquartersPanel);
-			HeadquartersPanel.SetActive (false);
 			break;
 		case UnitType.SettlerBot:
 			// Close Settler Bot Panel
@@ -148,6 +164,9 @@ public class BuildController : MonoBehaviour {
 			// The button should not be shown here becuase the selected unit does not have any corresponding actions.
 			break;
 		}
+
+		// clear build panel in any case
+		SetBuildMenuVisible (false);
 	}
 
 	public UnitType getSelectedPawnType() {
@@ -162,6 +181,15 @@ public class BuildController : MonoBehaviour {
 	}
 
 	public void SetBuildMenuVisible (bool visible) {
-		BuildPanel.SetActive (visible);
+
+		// set move control to true
+		moveBool = true;
+
+		if (visible == true) {
+			//moveCoordinates = new Vector3(
+		} 
+		else {
+
+		}
 	}
 }
