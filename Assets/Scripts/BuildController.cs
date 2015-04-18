@@ -5,12 +5,18 @@ public class BuildController : MonoBehaviour {
 
 	public GameObject BuildPanel;
 	public GameObject HeadquartersPanel;
+	public GameObject WorkerPanel;
+	public GameObject MeleePanel;
+	public GameObject HeavyPanel;
+	public GameObject FortificationPanel;
+	public GameObject MinePanel;
 	public GameObject MainCamera;
+	CameraControls cameraControls;
 
 	// vector for movement target (always lerps here)
 	public Vector3 moveCoordinates;
 	Vector3 oldPos;
-	bool moveBool;
+	public bool moveBool;
 	float speed;
 
 	public void OnBuildBaseBotClick () {
@@ -18,9 +24,7 @@ public class BuildController : MonoBehaviour {
 		UnitType unitType = UnitType.Base;
 
 		// Close build menu
-		CloseUnitPanel (unitType);
-
-		CameraControls cameraControls = MainCamera.GetComponent<CameraControls> ();
+		CloseBuildPanel();
 
 		// Have the user place the character
 		cameraControls.UnitToPlace = unitType;
@@ -28,12 +32,12 @@ public class BuildController : MonoBehaviour {
 		print ("Base built");
 	}
 
-	public void OnBuySettlerBotClick () {
+	public void OnBuyWorkerBotClick () {
 		// Subtract the cost of the purchase
 		// Close build menu
 		// Have the user place the character
 
-		print ("Settler bought");
+		print ("Worker bought");
 	}
 
 	public void OnBuyHeavyBotClick () {
@@ -52,12 +56,12 @@ public class BuildController : MonoBehaviour {
 		print ("Melee bought");
 	}
 
-	public void OnBuySettlerBotWithGoldClick () {
+	public void OnBuyWorkerBotWithGoldClick () {
 		// Subtract the cost of the purchase
 		// Close build menu
 		// Have the user place the character
 
-		print ("Settler bought with gold.");
+		print ("Worker bought with gold.");
 	}
 	
 	public void OnBuyHeavyBotWithGoldClick () {
@@ -86,25 +90,12 @@ public class BuildController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		speed = 10F;
-
-		moveCoordinates = new Vector3 (transform.position.x, transform.position.y, transform.position.z);
-		moveBool = false;
-		
+		cameraControls = MainCamera.GetComponent<CameraControls> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
-		if (moveBool == true) {
-
-			// move pawn to given location using Lerp and Update
-			BuildPanel.transform.position = Vector3.Lerp (transform.position, moveCoordinates, speed * Time.deltaTime);
-
-			if (oldPos == moveCoordinates) {
-				moveBool = false;
-			}
-		}
 	}
 
 	public void ShowUnitPanel (UnitType unitType) {
@@ -112,27 +103,47 @@ public class BuildController : MonoBehaviour {
 
 		// clear panel initially
 		HeadquartersPanel.SetActive (false);
+		WorkerPanel.SetActive (false);
+		MeleePanel.SetActive (false);
+		HeavyPanel.SetActive (false);
+		FortificationPanel.SetActive (false);
+		MinePanel.SetActive (false);
 
 		switch (unitType) {
 			
 			case UnitType.Base:
-				// Open Headquarters Panel
-				print ("Showing action panel for headquarters unit.");
+				// Show Headquarters build options
+				WorkerPanel.SetActive (true);
+				WorkerPanel.GetComponent<PanelScript>().EnableWithOwner(cameraControls.currentPlayer);
+
+				MeleePanel.SetActive (true);
+				MeleePanel.GetComponent<PanelScript>().EnableWithOwner(cameraControls.currentPlayer);
+
+				HeavyPanel.SetActive (true);
+				HeavyPanel.GetComponent<PanelScript>().EnableWithOwner(cameraControls.currentPlayer);
 				break;
+
 			case UnitType.SettlerBot:
 				// Open Settler Bot Panel
-				print ("Showing action panel for SettlerBot unit.");
-				print (HeadquartersPanel);
 				HeadquartersPanel.SetActive (true);
+				HeadquartersPanel.GetComponent<PanelScript>().EnableWithOwner(cameraControls.currentPlayer);
 				break;
+
 			case UnitType.WorkerBot:
 				// Open Worker Bot Panel
+				FortificationPanel.SetActive (true);
+				FortificationPanel.GetComponent<PanelScript>().EnableWithOwner(cameraControls.currentPlayer);
+
+				MinePanel.SetActive (true);
+				MinePanel.GetComponent<PanelScript>().EnableWithOwner(cameraControls.currentPlayer);
 				break;
+
 			case UnitType.MeleeBot:
-				// Open Melee Bot Panel
+				// no options for meleebot
 				break;
+
 			case UnitType.HeavyBot:
-				// Open Heavy Bot Panel
+				// no options for heavybot
 				break;
 			default:
 				// The button should not be shown here becuase the selected unit does not have any corresponding actions.
@@ -140,30 +151,7 @@ public class BuildController : MonoBehaviour {
 		}
 	}
 
-	public void CloseUnitPanel (UnitType unitType) {
-		switch (unitType) {
-			
-		case UnitType.Base:
-			// Close Settler Bot Panel
-			print("Closing headquarters panel.");
-			break;
-		case UnitType.SettlerBot:
-			// Close Settler Bot Panel
-			print("Closing settler bot panel.");
-			break;
-		case UnitType.WorkerBot:
-			// Close Worker Bot Panel
-			break;
-		case UnitType.MeleeBot:
-			// Close Melee Bot Panel
-			break;
-		case UnitType.HeavyBot:
-			// Close Heavy Bot Panel
-			break;
-		default:
-			// The button should not be shown here becuase the selected unit does not have any corresponding actions.
-			break;
-		}
+	public void CloseBuildPanel () {
 
 		// clear build panel in any case
 		SetBuildMenuVisible (false);
@@ -185,11 +173,6 @@ public class BuildController : MonoBehaviour {
 		// set move control to true
 		moveBool = true;
 
-		if (visible == true) {
-			//moveCoordinates = new Vector3(
-		} 
-		else {
-
-		}
+		BuildPanel.SetActive (visible);
 	}
 }

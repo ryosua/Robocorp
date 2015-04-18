@@ -68,6 +68,7 @@ public class CameraControls : MonoBehaviour {
 		UnitToPlace = UnitType.None;
 		currentPlayer = 1;
 		moveBool = false;
+		lastSelected = null;
 		paused = false;
 		turn = 1;
 	}

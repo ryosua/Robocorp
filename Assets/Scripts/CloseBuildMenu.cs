@@ -8,7 +8,7 @@ public class CloseBuildMenu : MonoBehaviour {
 	
 	public void OnClick () { 
 		cntl.SetBuildMenuVisible (false);
-		cntl.CloseUnitPanel (cntl.getSelectedPawnType ());
+		cntl.CloseBuildPanel ();
 	}
 
 	// Use this for initialization
