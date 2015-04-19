@@ -241,7 +241,7 @@ public class CameraControls : MonoBehaviour {
 	public void SpawnSelection (UnitType unit) {
 
 		UnitToPlace = unit;
-		GameObject chosenPrefab;
+		GameObject chosenPrefab = null;
 		PlayerController player;
 
 		// check which player (determines color prefab set)
@@ -266,9 +266,6 @@ public class CameraControls : MonoBehaviour {
 			case UnitType.HeavyBot:
 				chosenPrefab = HeavyBotRedPrefab;
 				break;
-			default:
-				throw new UnityException ("Built a unit with an unsupported UnitType");
-			//break;
 			}
 		}
 		// player 2 (blue)
@@ -300,7 +297,7 @@ public class CameraControls : MonoBehaviour {
 		}
 
 		if ((player.BuyUnit (chosenPrefab)) == 0) {
-			if ((SpawnPawn (chosenPrefab, lastSelected, currentPlayer, UnitToPlace)) == null) {
+			if ((SpawnPawn (chosenPrefab, lastSelected.GetComponent<PawnController>().currentTile, currentPlayer, UnitToPlace)) == null) {
 				// show UI panel saying no valid spawn location around building unit
 			}
 		} 
@@ -331,7 +328,7 @@ public class CameraControls : MonoBehaviour {
 
 				// if it is not occupied, spawn
 				if (spawnTile.left_block.GetComponent<GroundScript> ().occupied != true) {
-					return Spawn (spawnPrefab, spawnTileLocation, owningPlayer, unitType);
+					return Spawn (spawnPrefab, spawnTile.left_block, owningPlayer, unitType);
 				}
 			}
 			// if the upper block of the spawn tile isn't null, spawn there
@@ -339,7 +336,7 @@ public class CameraControls : MonoBehaviour {
 				
 				// if it is not occupied, spawn
 				if (spawnTile.up_block.GetComponent<GroundScript> ().occupied != true) {
-					return Spawn (spawnPrefab, spawnTileLocation, owningPlayer, unitType);
+					return Spawn (spawnPrefab, spawnTile.up_block, owningPlayer, unitType);
 				}
 			}
 			// if the right block of the spawn tile isn't null, spawn there
@@ -347,7 +344,7 @@ public class CameraControls : MonoBehaviour {
 				
 				// if it is not occupied, spawn
 				if (spawnTile.right_block.GetComponent<GroundScript> ().occupied != true) {
-					return Spawn (spawnPrefab, spawnTileLocation, owningPlayer, unitType);
+					return Spawn (spawnPrefab, spawnTile.right_block, owningPlayer, unitType);
 				}
 			}
 			// if the lower block of the spawn tile isn't null, spawn there
@@ -355,7 +352,7 @@ public class CameraControls : MonoBehaviour {
 				
 				// if it is not occupied, spawn
 				if (spawnTile.down_block.GetComponent<GroundScript> ().occupied != true) {
-					return Spawn (spawnPrefab, spawnTileLocation, owningPlayer, unitType);
+					return Spawn (spawnPrefab, spawnTile.right_block, owningPlayer, unitType);
 				}
 			}
 		}

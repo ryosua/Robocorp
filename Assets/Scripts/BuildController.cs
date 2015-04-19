@@ -13,6 +13,8 @@ public class BuildController : MonoBehaviour {
 	public GameObject MainCamera;
 	CameraControls cameraControls;
 
+	UnitType unit;
+
 	// vector for movement target (always lerps here)
 	public Vector3 moveCoordinates;
 	Vector3 oldPos;
@@ -21,7 +23,7 @@ public class BuildController : MonoBehaviour {
 
 	public void OnBuildBaseBotClick () {
 
-		UnitType unit = UnitType.Base;
+		unit = UnitType.Base;
 
 		// Close build menu
 		CloseBuildPanel();
