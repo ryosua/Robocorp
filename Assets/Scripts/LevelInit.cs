@@ -205,14 +205,14 @@ public class LevelInit : MonoBehaviour {
 		CameraControls cameraControls = mainCamera.GetComponent<CameraControls> ();
 
 		// spawn player1's settler on bottom of map
-		settlerUnit1 = cameraControls.SpawnPawn (cameraControls.SettlerBotPrefab, mapArray [Mathf.FloorToInt (levelLength / 2), Mathf.FloorToInt (levelWidth / 8)], 1, UnitType.SettlerBot);
+		settlerUnit1 = cameraControls.SpawnPawn (cameraControls.SettlerBotRedPrefab, mapArray [Mathf.FloorToInt (levelLength / 2), Mathf.FloorToInt (levelWidth / 8)], 1, UnitType.SettlerBot);
 
 		// set player1 base
 		mainCamera.GetComponent<CameraControls> ().player1Base = settlerUnit1;
 		mainCamera.GetComponent<CameraControls> ().MoveTo (settlerUnit1);
 
 		// spawn player2's settler on bottom of map
-		settlerUnit2 = cameraControls.SpawnPawn (cameraControls.SettlerBotPrefab, mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth - (levelWidth/8))], 2, UnitType.SettlerBot);
+		settlerUnit2 = cameraControls.SpawnPawn (cameraControls.SettlerBotBluePrefab, mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth - (levelWidth/8))], 2, UnitType.SettlerBot);
 
 		// set player2 base
 		mainCamera.GetComponent<CameraControls> ().player2Base = settlerUnit2;

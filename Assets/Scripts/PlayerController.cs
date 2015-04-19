@@ -30,6 +30,29 @@ public class PlayerController {
 
 	}
 
+	// function to subtract resources for a unit; returns 0 if successful, 1 if not
+	public int BuyUnit(GameObject unitPrefab) {
+
+		PawnController unit = unitPrefab.GetComponent<PawnController> ();
+
+		// check to make sure the player can afford the cost of all 3 resources
+		if ((goldCount - unit.goldCost) >= 0) {
+			if ((oilCount - unit.oilCost) >= 0) {
+				if ((oreCount - unit.oreCost) >= 0) {
+
+					// if they can afford it, subtract costs and return 0
+					goldCount = goldCount - unit.goldCost;
+					oilCount = oilCount - unit.oilCost;
+					oreCount = oreCount - unit.oreCost;
+
+					return 0;
+				}
+			}
+		}
+
+		return 1;
+	}
+
 	// function to take turn for all of a player's units
 	public void TakeTurn() {
 

@@ -21,37 +21,49 @@ public class BuildController : MonoBehaviour {
 
 	public void OnBuildBaseBotClick () {
 
-		UnitType unitType = UnitType.Base;
+		UnitType unit = UnitType.Base;
 
 		// Close build menu
 		CloseBuildPanel();
 
-		// Have the user place the character
-		cameraControls.UnitToPlace = unitType;
+		// Spawn the unit nearby
+		cameraControls.SpawnSelection (unit);
 
 		print ("Base built");
 	}
 
 	public void OnBuyWorkerBotClick () {
-		// Subtract the cost of the purchase
+		UnitType unit = UnitType.WorkerBot;
+		
 		// Close build menu
-		// Have the user place the character
+		CloseBuildPanel();
+		
+		// Spawn the unit nearby
+		cameraControls.SpawnSelection (unit);
 
 		print ("Worker bought");
 	}
 
 	public void OnBuyHeavyBotClick () {
-		// Subtract the cost of the purchase
+		UnitType unit = UnitType.HeavyBot;
+		
 		// Close build menu
-		// Have the user place the character
+		CloseBuildPanel();
+		
+		// Spawn the unit nearby
+		cameraControls.SpawnSelection (unit);
 
 		print ("Heavy bought");
 	}
 
 	public void OnBuyMeleeBotClick () {
-		// Subtract the cost of the purchase
+		UnitType unit = UnitType.MeleeBot;
+		
 		// Close build menu
-		// Have the user place the character 
+		CloseBuildPanel();
+		
+		// Spawn the unit nearby
+		cameraControls.SpawnSelection (unit); 
 
 		print ("Melee bought");
 	}

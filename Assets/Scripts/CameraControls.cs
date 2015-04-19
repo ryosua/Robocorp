@@ -30,13 +30,21 @@ public class CameraControls : MonoBehaviour {
 	public GameObject actionPanel;
 	public GameObject lossPanel;
 
-	// unit prefabs
-	public GameObject SettlerBotPrefab;
-	public GameObject HeavyBotPrefab;
-	public GameObject MeleeBotPrefab;
-	public GameObject WorkerBotPrefab;
-	public GameObject RangedBotPrefab;
-	public GameObject BasePrefab;
+	// red unit prefabs
+	public GameObject SettlerBotRedPrefab;
+	public GameObject HeavyBotRedPrefab;
+	public GameObject MeleeBotRedPrefab;
+	public GameObject WorkerBotRedPrefab;
+	public GameObject RangedBotRedPrefab;
+	public GameObject BaseRedPrefab;
+
+	// blue unit prefabs
+	public GameObject SettlerBotBluePrefab;
+	public GameObject HeavyBotBluePrefab;
+	public GameObject MeleeBotBluePrefab;
+	public GameObject WorkerBotBluePrefab;
+	public GameObject RangedBotBluePrefab;
+	public GameObject BaseBluePrefab;
 
 	// get level init object (for player lists, unit lists)
 	public GameObject levelInit;
@@ -141,7 +149,7 @@ public class CameraControls : MonoBehaviour {
 		moveBool = true; 
 	}
 
-	// function to set up UI when a pawn is clicked; UIState = 0 if not initialized, 1 if initialized
+	// function to set up UI when a pawn is clicked;
 	void UIUpdatePawnInfo(GameObject target, int owned) {
 		// set color and correct numbers for moves/actions on UI
 
@@ -227,6 +235,82 @@ public class CameraControls : MonoBehaviour {
 		oilText.text = "Oil:\t" + player.oilCount.ToString ();
 		goldText.text = "Gold:\t" + player.goldCount.ToString ();
 		oreText.text = "Ore:\t" + player.oreCount.ToString ();
+	}
+
+	// function to choose the unit to spawn based off of unittype
+	public void SpawnSelection (UnitType unit) {
+
+		UnitToPlace = unit;
+		GameObject chosenPrefab;
+		PlayerController player;
+
+		// check which player (determines color prefab set)
+		if (currentPlayer == 1) {
+
+			player = levelInit.GetComponent<LevelInit>().player1;
+		
+			switch (UnitToPlace) {
+			
+			case UnitType.Base: 
+				chosenPrefab = BaseRedPrefab;
+				break;
+			case UnitType.SettlerBot: 
+				chosenPrefab = SettlerBotRedPrefab;
+				break;
+			case UnitType.WorkerBot:
+				chosenPrefab = WorkerBotRedPrefab;
+				break;
+			case UnitType.MeleeBot:
+				chosenPrefab = MeleeBotRedPrefab;
+				break;
+			case UnitType.HeavyBot:
+				chosenPrefab = HeavyBotRedPrefab;
+				break;
+			default:
+				throw new UnityException ("Built a unit with an unsupported UnitType");
+			//break;
+			}
+		}
+		// player 2 (blue)
+		else {
+
+			player = levelInit.GetComponent<LevelInit>().player2;
+
+			switch (UnitToPlace) {
+				
+			case UnitType.Base:
+				chosenPrefab = BaseBluePrefab;
+				break;
+			case UnitType.SettlerBot: 
+				chosenPrefab = SettlerBotBluePrefab;
+				break;
+			case UnitType.WorkerBot:
+				chosenPrefab = WorkerBotBluePrefab;
+				break;
+			case UnitType.MeleeBot:
+				chosenPrefab = MeleeBotBluePrefab;
+				break;
+			case UnitType.HeavyBot:
+				chosenPrefab = HeavyBotBluePrefab;
+				break;
+			default:
+				throw new UnityException ("Built a unit with an unsupported UnitType");
+				//break;
+			}
+		}
+
+		if ((player.BuyUnit (chosenPrefab)) == 0) {
+			if ((SpawnPawn (chosenPrefab, lastSelected, currentPlayer, UnitToPlace)) == null) {
+				// show UI panel saying no valid spawn location around building unit
+			}
+		} 
+		else {
+			// show UI panel saying the player can't afford it
+		}
+		
+		// The unit has been placed.
+		UnitToPlace = UnitType.None;
+		UIResourceUpdate ();
 	}
 
 	// spawn an arbitrary pawn at spawnTileLocation. Spawns beside tile location (or not at all)
@@ -407,39 +491,6 @@ public class CameraControls : MonoBehaviour {
 								}
 							}
 						}
-						else if (UnitToPlace != UnitType.None) {
-							// Spawn the unit that was purchased.
-
-							//TODO: Fix this.
-							GameObject spawnLocation = null;
-
-							switch (UnitToPlace) {
-							
-								case UnitType.Base: 
-									selected = SpawnPawn (BasePrefab, spawnLocation, currentPlayer, UnitToPlace);
-									break;
-								case UnitType.SettlerBot: 
-									selected = SpawnPawn (SettlerBotPrefab, spawnLocation, currentPlayer, UnitToPlace);
-									break;
-								case UnitType.WorkerBot:
-									selected = SpawnPawn (WorkerBotPrefab, spawnLocation, currentPlayer, UnitToPlace);
-									break;
-								case UnitType.MeleeBot:
-									selected = SpawnPawn (MeleeBotPrefab, spawnLocation, currentPlayer, UnitToPlace);
-									break;
-								case UnitType.HeavyBot:
-									selected = SpawnPawn (HeavyBotPrefab, spawnLocation, currentPlayer, UnitToPlace);
-									break;
-								default:
-									throw new UnityException("Built a unit with an unsupported UnitType");
-									//break;
-							}
-
-
-							// The unit has been placed.
-							UnitToPlace = UnitType.None;
-						}
-
 						// update UI
 						UIUpdatePawnInfo(selected, 1);
 					}
