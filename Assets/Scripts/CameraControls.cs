@@ -242,14 +242,7 @@ public class CameraControls : MonoBehaviour {
 	// function to update resource UI
 	public void UIResourceUpdate() {
 		// update all UI text as above on resource panel
-		PlayerController player;
-
-		if (currentPlayer == 1) {
-			player = levelInit.GetComponent<LevelInit> ().player1;
-		} 
-		else {
-			player = levelInit.GetComponent<LevelInit> ().player2;
-		}
+		PlayerController player = GetPlayerController ();
 
 		oilText.text = "Oil:\t" + player.oilCount.ToString ();
 		goldText.text = "Gold:\t" + player.goldCount.ToString ();
@@ -262,13 +255,11 @@ public class CameraControls : MonoBehaviour {
 		UnitToPlace = unit;
 		GameObject chosenPrefab = null;
 		bool resetBase = false;
-		PlayerController player;
+		PlayerController player = GetPlayerController ();
 
 		// check which player (determines color prefab set)
 		if (currentPlayer == 1) {
 
-			player = levelInit.GetComponent<LevelInit>().player1;
-		
 			switch (UnitToPlace) {
 			
 			case UnitType.Base: 
@@ -291,8 +282,6 @@ public class CameraControls : MonoBehaviour {
 		}
 		// player 2 (blue)
 		else {
-
-			player = levelInit.GetComponent<LevelInit>().player2;
 
 			switch (UnitToPlace) {
 				
@@ -644,5 +633,18 @@ public class CameraControls : MonoBehaviour {
 		}
 		
 		Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, cameraMin, cameraMax );
+	}
+
+	public PlayerController GetPlayerController () {
+		PlayerController player;
+		
+		if (currentPlayer == 1) {
+			player = levelInit.GetComponent<LevelInit> ().player1;
+		} 
+		else {
+			player = levelInit.GetComponent<LevelInit> ().player2;
+		}
+
+		return player;
 	}
 }
