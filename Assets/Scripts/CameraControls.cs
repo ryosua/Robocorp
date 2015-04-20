@@ -57,7 +57,6 @@ public class CameraControls : MonoBehaviour {
 	int cameraMin;
 	int cameraMax;
 	float scrollValue;
-	float lastScrollValue;
 
 	// vector for movement target (always lerps here)
 	public Vector3 moveCoordinates;
@@ -88,7 +87,6 @@ public class CameraControls : MonoBehaviour {
 
 		cameraMax = 10;
 		cameraMin = 1;
-		lastScrollValue = 0F;
 		scrollValue = 0F;
 	}
 
@@ -178,6 +176,10 @@ public class CameraControls : MonoBehaviour {
 					moveText.text = "Moves Remaining:\t" + targetUnit.currentMoves.ToString ();
 				}
 
+				if (targetUnit.canAct == true) {
+					buildButton.interactable = true;
+				}
+
 				// in all cases, display actions, health, and attack (even if 0)
 				actionText.color = Color.black;
 				actionText.text = "Actions Remaining:\t" + targetUnit.currentActions.ToString ();
@@ -229,6 +231,12 @@ public class CameraControls : MonoBehaviour {
 		
 		// activate actionPanel color
 		actionPanel.GetComponent<Image>().color = Color.grey;
+
+		if (lastSelected != null) {
+			if (lastSelected.GetComponent<PawnController> ().canAct != true) {
+				buildButton.interactable = false;
+			}
+		}
 	}
 
 	// function to update resource UI
@@ -253,6 +261,7 @@ public class CameraControls : MonoBehaviour {
 
 		UnitToPlace = unit;
 		GameObject chosenPrefab = null;
+		bool resetBase = false;
 		PlayerController player;
 
 		// check which player (determines color prefab set)
@@ -264,6 +273,7 @@ public class CameraControls : MonoBehaviour {
 			
 			case UnitType.Base: 
 				chosenPrefab = BaseRedPrefab;
+				resetBase = true;
 				break;
 			case UnitType.SettlerBot: 
 				chosenPrefab = SettlerBotRedPrefab;
@@ -288,6 +298,7 @@ public class CameraControls : MonoBehaviour {
 				
 			case UnitType.Base:
 				chosenPrefab = BaseBluePrefab;
+				resetBase = true;
 				break;
 			case UnitType.SettlerBot: 
 				chosenPrefab = SettlerBotBluePrefab;
@@ -308,8 +319,18 @@ public class CameraControls : MonoBehaviour {
 		}
 
 		if ((player.BuyUnit (chosenPrefab)) == 0) {
-			if ((SpawnPawn (chosenPrefab, lastSelected.GetComponent<PawnController>().currentTile, currentPlayer, UnitToPlace)) == null) {
+			if ((chosenPrefab = (GameObject)(SpawnPawn (chosenPrefab, lastSelected.GetComponent<PawnController>().currentTile, currentPlayer, UnitToPlace))) == null) {
 				// show UI panel saying no valid spawn location around building unit
+			}
+			else {
+				if (resetBase) {
+					if (currentPlayer == 1) {
+						player1Base = chosenPrefab;
+					}
+					else {
+						player2Base = chosenPrefab;
+					}
+				}
 			}
 		} 
 		else {
@@ -620,7 +641,6 @@ public class CameraControls : MonoBehaviour {
 			else {
 				Camera.main.orthographicSize++;
 			}
-			lastScrollValue = Input.GetAxis ("Mouse ScrollWheel");
 		}
 		
 		Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, cameraMin, cameraMax );
