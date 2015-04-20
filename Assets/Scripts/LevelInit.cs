@@ -55,7 +55,7 @@ public class LevelInit : MonoBehaviour {
 				// start panels with the middle at where this gameObject lies
 				// randomize panel placement
 				tileRoll = Random.value;
-
+			
 				// Ground
 				if(tileRoll > 0.1)
 				{
@@ -135,17 +135,9 @@ public class LevelInit : MonoBehaviour {
 
 				}
 
-				/*
-
-				if (tileRoll >= 0.05) {
-					mapArray[i+1, j+1] = (GameObject)Instantiate(groundPanel, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
-				    	                                 transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
-				}
-				else {
-					mapArray[i+1,j+1] = (GameObject)Instantiate(Resource1Panel, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
-					                                     transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
-				}
-				*/
+				// Assign special.
+				GroundScript groundScript = mapArray[i+1, j+1].GetComponent<GroundScript> ();
+				AssignSpecial (groundScript);
 			}
 		}
 
@@ -228,5 +220,21 @@ public class LevelInit : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+	}
+
+	/*
+		Assigns a special property to a tile.
+
+		10% chance of bonus,
+		10% chance of trap
+	*/
+	private void AssignSpecial (GroundScript groundScript) {
+		float specialValue = Random.value;
+		if (specialValue <= 0.10) {
+			groundScript.SetSpecial(new Bonus ());
+		}
+		else if (specialValue > 0.10 && specialValue <= 0.20) {
+			groundScript.SetSpecial(new Trap ());
+		}
 	}
 }

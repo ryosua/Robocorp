@@ -106,21 +106,22 @@ public class PawnController : Pawn {
 
 		// store direction in nextTile to simplify code
 		GameObject nextTile;
+		GroundScript groundScript = currentTile.GetComponent<GroundScript> ();
 
 		// get block from direction
 		switch (direction)
 		{
 		case 1:
-			nextTile = currentTile.GetComponent<GroundScript>().up_block;
+			nextTile = groundScript.up_block;
 			break;
 		case 2:
-			nextTile = currentTile.GetComponent<GroundScript>().down_block;
+			nextTile = groundScript.down_block;
 			break;
 		case 3:
-			nextTile = currentTile.GetComponent<GroundScript>().left_block;
+			nextTile = groundScript.left_block;
 			break;
 		case 4:
-			nextTile = currentTile.GetComponent<GroundScript>().right_block;
+			nextTile = groundScript.right_block;
 			break;
 		default:
 			// errored out, return
@@ -132,6 +133,12 @@ public class PawnController : Pawn {
 
 			// check if we are moving to a valid space
 			if (nextTile != null) {
+
+				// If the tile has a special, trigger the encounter.
+				Special special = groundScript.getSpecial ();
+				if (special != null) {
+					special.OnSpecialEncounter ();
+				}
 
 				// check if unit is commandable
 				if (commandable == true) {
@@ -149,8 +156,8 @@ public class PawnController : Pawn {
 							currentMoves = currentMoves -1;
 						
 							// set occupied for current, next tile
-							currentTile.GetComponent<GroundScript>().occupied = false;
-							currentTile.GetComponent<GroundScript>().occupiedObject = null;
+							groundScript.occupied = false;
+							groundScript.occupiedObject = null;
 							nextTile.GetComponent<GroundScript>().occupied = true;
 							nextTile.GetComponent<GroundScript>().occupiedObject = transform.gameObject;
 
