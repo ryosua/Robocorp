@@ -229,9 +229,10 @@ public class LevelInit : MonoBehaviour {
 		10% chance of trap
 	*/
 	private void AssignSpecial (GroundScript groundScript) {
+		CameraControls cameraControls = mainCamera.GetComponent<CameraControls> ();
 		float specialValue = Random.value;
 		if (specialValue <= 0.10) {
-			groundScript.SetSpecial(new Bonus ());
+			groundScript.SetSpecial(new Bonus (cameraControls));
 		}
 		else if (specialValue > 0.10 && specialValue <= 0.20) {
 			groundScript.SetSpecial(new Trap ());

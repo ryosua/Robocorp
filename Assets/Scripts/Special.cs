@@ -20,7 +20,7 @@ public abstract class Special {
 	}
 
 	/*
-		The effect of the special.
+		The effect of the special, call OnSpecialEncounter instead.
 	*/
 	public abstract void Reaction ();
 }
