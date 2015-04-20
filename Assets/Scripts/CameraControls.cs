@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
+using System.Collections.Generic;
 
 public class CameraControls : MonoBehaviour {
 
@@ -30,13 +30,21 @@ public class CameraControls : MonoBehaviour {
 	public GameObject actionPanel;
 	public GameObject lossPanel;
 
-	// unit prefabs
-	public GameObject SettlerBotPrefab;
-	public GameObject HeavyBotPrefab;
-	public GameObject MeleeBotPrefab;
-	public GameObject WorkerBotPrefab;
-	public GameObject RangedBotPrefab;
-	public GameObject BasePrefab;
+	// red unit prefabs
+	public GameObject SettlerBotRedPrefab;
+	public GameObject HeavyBotRedPrefab;
+	public GameObject MeleeBotRedPrefab;
+	public GameObject WorkerBotRedPrefab;
+	public GameObject RangedBotRedPrefab;
+	public GameObject BaseRedPrefab;
+
+	// blue unit prefabs
+	public GameObject SettlerBotBluePrefab;
+	public GameObject HeavyBotBluePrefab;
+	public GameObject MeleeBotBluePrefab;
+	public GameObject WorkerBotBluePrefab;
+	public GameObject RangedBotBluePrefab;
+	public GameObject BaseBluePrefab;
 
 	// get level init object (for player lists, unit lists)
 	public GameObject levelInit;
@@ -65,10 +73,15 @@ public class CameraControls : MonoBehaviour {
 	// keep track of current player
 	public int currentPlayer;
 
+	// When a player buys a unit it is stored here until it is placed.
+	public UnitType UnitToPlace { get; set; }
+		
 	// Use this for initialization
 	void Start () {
+		UnitToPlace = UnitType.None;
 		currentPlayer = 1;
 		moveBool = false;
+		lastSelected = null;
 		paused = false;
 		turn = 1;
 
@@ -146,7 +159,7 @@ public class CameraControls : MonoBehaviour {
 		moveBool = true; 
 	}
 
-	// function to set up UI when a pawn is clicked; UIState = 0 if not initialized, 1 if initialized
+	// function to set up UI when a pawn is clicked;
 	void UIUpdatePawnInfo(GameObject target, int owned) {
 		// set color and correct numbers for moves/actions on UI
 
@@ -236,8 +249,81 @@ public class CameraControls : MonoBehaviour {
 		oreText.text = "Ore:\t" + player.oreCount.ToString ();
 	}
 
+	// function to choose the unit to spawn based off of unittype
+	public void SpawnSelection (UnitType unit) {
+
+		UnitToPlace = unit;
+		GameObject chosenPrefab = null;
+		PlayerController player;
+
+		// check which player (determines color prefab set)
+		if (currentPlayer == 1) {
+
+			player = levelInit.GetComponent<LevelInit>().player1;
+		
+			switch (UnitToPlace) {
+			
+			case UnitType.Base: 
+				chosenPrefab = BaseRedPrefab;
+				break;
+			case UnitType.SettlerBot: 
+				chosenPrefab = SettlerBotRedPrefab;
+				break;
+			case UnitType.WorkerBot:
+				chosenPrefab = WorkerBotRedPrefab;
+				break;
+			case UnitType.MeleeBot:
+				chosenPrefab = MeleeBotRedPrefab;
+				break;
+			case UnitType.HeavyBot:
+				chosenPrefab = HeavyBotRedPrefab;
+				break;
+			}
+		}
+		// player 2 (blue)
+		else {
+
+			player = levelInit.GetComponent<LevelInit>().player2;
+
+			switch (UnitToPlace) {
+				
+			case UnitType.Base:
+				chosenPrefab = BaseBluePrefab;
+				break;
+			case UnitType.SettlerBot: 
+				chosenPrefab = SettlerBotBluePrefab;
+				break;
+			case UnitType.WorkerBot:
+				chosenPrefab = WorkerBotBluePrefab;
+				break;
+			case UnitType.MeleeBot:
+				chosenPrefab = MeleeBotBluePrefab;
+				break;
+			case UnitType.HeavyBot:
+				chosenPrefab = HeavyBotBluePrefab;
+				break;
+			default:
+				throw new UnityException ("Built a unit with an unsupported UnitType");
+				//break;
+			}
+		}
+
+		if ((player.BuyUnit (chosenPrefab)) == 0) {
+			if ((SpawnPawn (chosenPrefab, lastSelected.GetComponent<PawnController>().currentTile, currentPlayer, UnitToPlace)) == null) {
+				// show UI panel saying no valid spawn location around building unit
+			}
+		} 
+		else {
+			// show UI panel saying the player can't afford it
+		}
+		
+		// The unit has been placed.
+		UnitToPlace = UnitType.None;
+		UIResourceUpdate ();
+	}
+
 	// spawn an arbitrary pawn at spawnTileLocation. Spawns beside tile location (or not at all)
-	public int SpawnPawn(GameObject spawnPrefab, GameObject spawnTileLocation, int owningPlayer, UnitType pawnType) {
+	public GameObject SpawnPawn(GameObject spawnPrefab, GameObject spawnTileLocation, int owningPlayer, UnitType unitType) {
 
 		// check if this tile exists
 		if (spawnTileLocation != null) {
@@ -246,8 +332,7 @@ public class CameraControls : MonoBehaviour {
 
 			// check if this tile location is occupied (maybe a building)
 			if (spawnTile.occupied != true) {
-				Spawn (spawnPrefab, spawnTileLocation, owningPlayer);
-				return 0;
+				return Spawn (spawnPrefab, spawnTileLocation, owningPlayer, unitType);
 			}
 
 			// if the left block of the spawn tile isn't null, spawn there
@@ -255,8 +340,7 @@ public class CameraControls : MonoBehaviour {
 
 				// if it is not occupied, spawn
 				if (spawnTile.left_block.GetComponent<GroundScript> ().occupied != true) {
-					Spawn (spawnPrefab, spawnTileLocation, owningPlayer);
-					return 0;
+					return Spawn (spawnPrefab, spawnTile.left_block, owningPlayer, unitType);
 				}
 			}
 			// if the upper block of the spawn tile isn't null, spawn there
@@ -264,8 +348,7 @@ public class CameraControls : MonoBehaviour {
 				
 				// if it is not occupied, spawn
 				if (spawnTile.up_block.GetComponent<GroundScript> ().occupied != true) {
-					Spawn (spawnPrefab, spawnTileLocation, owningPlayer);
-					return 0;
+					return Spawn (spawnPrefab, spawnTile.up_block, owningPlayer, unitType);
 				}
 			}
 			// if the right block of the spawn tile isn't null, spawn there
@@ -273,8 +356,7 @@ public class CameraControls : MonoBehaviour {
 				
 				// if it is not occupied, spawn
 				if (spawnTile.right_block.GetComponent<GroundScript> ().occupied != true) {
-					Spawn (spawnPrefab, spawnTileLocation, owningPlayer);
-					return 0;
+					return Spawn (spawnPrefab, spawnTile.right_block, owningPlayer, unitType);
 				}
 			}
 			// if the lower block of the spawn tile isn't null, spawn there
@@ -282,17 +364,16 @@ public class CameraControls : MonoBehaviour {
 				
 				// if it is not occupied, spawn
 				if (spawnTile.down_block.GetComponent<GroundScript> ().occupied != true) {
-					Spawn (spawnPrefab, spawnTileLocation, owningPlayer);
-					return 0;
+					return Spawn (spawnPrefab, spawnTile.right_block, owningPlayer, unitType);
 				}
 			}
 		}
 		// no valid spot to spawn
-		return -1;
+		return null;
 	}
 
 	// private spawn method to handle bookkeeping
-	void Spawn(GameObject spawnPrefab, GameObject spawnTileLocation, int owningPlayer) {
+	GameObject Spawn(GameObject spawnPrefab, GameObject spawnTileLocation, int owningPlayer, UnitType unitType) {
 
 		// instantiate the pawn, set it's tile, set it's owner, set the tile's occupancy
 		spawnPrefab = (GameObject)Instantiate (spawnPrefab, spawnTileLocation.transform.position, spawnTileLocation.transform.rotation);
@@ -308,6 +389,10 @@ public class CameraControls : MonoBehaviour {
 		else {
 			spawnPrefab.GetComponent<PawnController>().unitID = levelInit.GetComponent<LevelInit>().player2.AddUnit(spawnPrefab);
 		}
+
+		spawnPrefab.GetComponent<PawnController> ().SetUnitType (unitType);
+
+		return spawnPrefab;
 	}
 	
 	// Update is called once per frame; here we handle selection, deselection, movement
@@ -382,38 +467,41 @@ public class CameraControls : MonoBehaviour {
 					// check if we are moving to an invalid block
 					if ((hit.transform.gameObject.tag != ("MovementBlocker"))) {
 
-						// move the pawn using that pawn's code
-						// determine direction with distance from selection
-						float xDist = hit.transform.position.x - selected.transform.position.x;
-						float yDist = hit.transform.position.y - selected.transform.position.y;
-
-						if (Mathf.Abs (xDist) >= Mathf.Abs (yDist)) {
-
-							if (xDist > 0) {
-								if (selected.GetComponent<PawnController>().MoveTo(4) == 0) {
-									moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
-									moveBool = true;
-								}
-							}
-							else {
-								if (selected.GetComponent<PawnController>().MoveTo(3) == 0) {
-									moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
-									moveBool = true;
-								}
-							}
-						}
-						else {
+						// If there is no pawn to place
+						if (UnitToPlace == UnitType.None) {
+							// move the pawn using that pawn's code
+							// determine direction with distance from selection
+							float xDist = hit.transform.position.x - selected.transform.position.x;
+							float yDist = hit.transform.position.y - selected.transform.position.y;
 							
-							if (yDist > 0) {
-								if (selected.GetComponent<PawnController>().MoveTo(1) == 0) {
-									moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
-									moveBool = true;
+							if (Mathf.Abs (xDist) >= Mathf.Abs (yDist)) {
+								
+								if (xDist > 0) {
+									if (selected.GetComponent<PawnController>().MoveTo(4) == 0) {
+										moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
+										moveBool = true;
+									}
+								}
+								else {
+									if (selected.GetComponent<PawnController>().MoveTo(3) == 0) {
+										moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
+										moveBool = true;
+									}
 								}
 							}
 							else {
-								if (selected.GetComponent<PawnController>().MoveTo(2) == 0) {
-									moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);;
-									moveBool = true;
+								
+								if (yDist > 0) {
+									if (selected.GetComponent<PawnController>().MoveTo(1) == 0) {
+										moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
+										moveBool = true;
+									}
+								}
+								else {
+									if (selected.GetComponent<PawnController>().MoveTo(2) == 0) {
+										moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
+										moveBool = true;
+									}
 								}
 							}
 						}

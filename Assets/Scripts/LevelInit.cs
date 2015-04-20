@@ -202,30 +202,19 @@ public class LevelInit : MonoBehaviour {
 		player2.InitPlayer (2, startOre, startGold, startOil);
 		player2.GetCamera (mainCamera);
 
-		// spawn player1's settler on bottom of map
-		settlerUnit1 = (GameObject)Instantiate (settlerUnit1, mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth/8)].transform.position, transform.rotation);
-		settlerUnit1.BroadcastMessage("SetTile", mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth/8)]);
-		settlerUnit1.BroadcastMessage ("SetOwner", 1);
-		settlerUnit1.BroadcastMessage ("SetCamera", mainCamera);
-		settlerUnit1.GetComponent<PawnController> ().currentTile.GetComponent<GroundScript> ().SetOccupant (settlerUnit1);
-		settlerUnit1.GetComponent<PawnController> ().SetUnitType (UnitType.SettlerBot);
+		CameraControls cameraControls = mainCamera.GetComponent<CameraControls> ();
 
-		// add settler to player1's unit list, set unit's unitID
-		settlerUnit1.GetComponent<PawnController>().unitID = player1.AddUnit(settlerUnit1);
+		// spawn player1's settler on bottom of map
+		settlerUnit1 = cameraControls.SpawnPawn (cameraControls.SettlerBotRedPrefab, mapArray [Mathf.FloorToInt (levelLength / 2), Mathf.FloorToInt (levelWidth / 8)], 1, UnitType.SettlerBot);
+
+		// set player1 base
 		mainCamera.GetComponent<CameraControls> ().player1Base = settlerUnit1;
 		mainCamera.GetComponent<CameraControls> ().MoveTo (settlerUnit1);
 
-
 		// spawn player2's settler on bottom of map
-		settlerUnit2 = (GameObject)Instantiate (settlerUnit2, mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth -(levelWidth/8))].transform.position, transform.rotation);
-		settlerUnit2.BroadcastMessage("SetTile", mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth - (levelWidth/8))]);
-		settlerUnit2.BroadcastMessage ("SetOwner", 2);
-		settlerUnit2.BroadcastMessage ("SetCamera", mainCamera);
-		settlerUnit2.GetComponent<PawnController> ().currentTile.GetComponent<GroundScript> ().SetOccupant (settlerUnit2);
-		settlerUnit2.GetComponent<PawnController> ().SetUnitType (UnitType.SettlerBot);
+		settlerUnit2 = cameraControls.SpawnPawn (cameraControls.SettlerBotBluePrefab, mapArray[Mathf.FloorToInt(levelLength/2), Mathf.FloorToInt(levelWidth - (levelWidth/8))], 2, UnitType.SettlerBot);
 
-		// add settler to player2's unit list, set unit's unitID
-		settlerUnit2.GetComponent<PawnController>().unitID = player2.AddUnit(settlerUnit2);
+		// set player2 base
 		mainCamera.GetComponent<CameraControls> ().player2Base = settlerUnit2;
 
 		// spawn selector particle

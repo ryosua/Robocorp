@@ -17,7 +17,13 @@ public class PawnController : Pawn {
 	public int unitID;
 	private UnitType unitType;
 
+	// economy stats
+	public int goldCost;
+	public int oreCost;
+	public int oilCost;
+
 	// action stats
+	public bool canAct;	// to designate pawns that can use the action button
 	public int actionsPerTurn;
 	public int movesPerAction;
 	public int currentActions;
