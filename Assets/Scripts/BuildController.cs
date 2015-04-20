@@ -31,6 +31,13 @@ public class BuildController : MonoBehaviour {
 		// Spawn the unit nearby
 		cameraControls.SpawnSelection (unit);
 
+		if (cameraControls.currentPlayer == 1) {
+			cameraControls.levelInit.GetComponent<LevelInit> ().settlerUnit1.GetComponent<PawnController> ().Destroy ();
+		} 
+		else {
+			cameraControls.levelInit.GetComponent<LevelInit> ().settlerUnit2.GetComponent<PawnController> ().Destroy ();
+		}
+
 		print ("Base built");
 	}
 
