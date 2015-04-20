@@ -77,38 +77,6 @@ public class BuildController : MonoBehaviour {
 		print ("Melee bought");
 	}
 
-	public void OnBuyWorkerBotWithGoldClick () {
-		// Subtract the cost of the purchase
-		// Close build menu
-		// Have the user place the character
-
-		print ("Worker bought with gold.");
-	}
-	
-	public void OnBuyHeavyBotWithGoldClick () {
-		// Subtract the cost of the purchase
-		// Close build menu
-		// Have the user place the character
-
-		print ("Heavy bought with gold.");
-	}
-	
-	public void OnBuyMeleeBoWithGoldClick () {
-		// Subtract the cost of the purchase
-		// Close build menu
-		// Have the user place the character 
-
-		print ("Melee bought with gold.");
-	}
-
-	public void OnBuyFortificationsWithGoldClick () {
-		// Subtract the cost of the purchase
-		// Close build menu
-		// Have the user place the character
-
-		print ("Fortifications bought.");
-	}
-
 	// Use this for initialization
 	void Start () {
 		cameraControls = MainCamera.GetComponent<CameraControls> ();
