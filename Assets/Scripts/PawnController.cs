@@ -28,8 +28,6 @@ public class PawnController : Pawn {
 	public int movesPerAction;
 	public int currentActions;
 	public int currentMoves;
-	public bool canBuild;
-	public bool busy;
 
 	public GameObject mainCamera;
 
@@ -190,7 +188,6 @@ public class PawnController : Pawn {
 	void Start () {
 		// set default coords
 		moveCoordinates = transform.position;
-		busy = false;
 
 		// set default moves
 		currentMoves = movesPerAction;
