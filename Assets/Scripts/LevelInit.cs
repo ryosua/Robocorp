@@ -235,7 +235,7 @@ public class LevelInit : MonoBehaviour {
 			groundScript.SetSpecial(new Bonus (cameraControls));
 		}
 		else if (specialValue > 0.10 && specialValue <= 0.20) {
-			groundScript.SetSpecial(new Trap ());
+			groundScript.SetSpecial(new Trap (cameraControls));
 		}
 	}
 }

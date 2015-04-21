@@ -2,11 +2,9 @@
 using System.Collections;
 
 public class Bonus : Special {
-
-	private CameraControls cameraControls;
-
-	public Bonus (CameraControls cameraControls) {
-		this.cameraControls = cameraControls;
+	
+	public Bonus (CameraControls cameraControls)
+		: base(cameraControls) {
 	}
 
 	/*
@@ -14,9 +12,9 @@ public class Bonus : Special {
 	*/
 	public override void Reaction () {
 		int bonusAmount = 10;
-		PlayerController playerController = cameraControls.GetPlayerController ();
+		PlayerController playerController = GetCameraControls() .GetPlayerController ();
 		playerController.goldCount = playerController.goldCount + bonusAmount;
-		cameraControls.goldText.text = "Gold:	" + playerController.goldCount.ToString ();
-		Debug.Log ("You earned a bonus of " + bonusAmount + "gold!");
+		GetCameraControls() .goldText.text = "Gold:	" + playerController.goldCount.ToString ();
+		Debug.Log ("You earned a bonus of " + bonusAmount + " gold!");
 	}
 }

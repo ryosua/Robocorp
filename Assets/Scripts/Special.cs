@@ -3,9 +3,11 @@
 */
 public abstract class Special {
 
+	private CameraControls cameraControls;
 	private bool used;
 
-	public Special () {
+	public Special (CameraControls cameraControls) {
+		this.cameraControls = cameraControls;
 		used = false;
 	}
 
@@ -23,4 +25,8 @@ public abstract class Special {
 		The effect of the special, call OnSpecialEncounter instead.
 	*/
 	public abstract void Reaction ();
+
+	protected CameraControls GetCameraControls () {
+		return cameraControls;
+	}
 }
