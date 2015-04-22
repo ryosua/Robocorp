@@ -1,25 +1,32 @@
 fileFormatVersion: 2
 guid: f87411e0a12c5ae47afe564d9342f87d
-timeCreated: 1428514983
+timeCreated: 1429746431
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - currentTile: {instanceID: 0}
-  - groundPanel: {fileID: 139256, guid: feb0fad1dce12b641b8fd91e0aae8bdf, type: 2}
   - mainCamera: {instanceID: 0}
-  - Resource1Panel: {instanceID: 0}
   - settlerUnit1: {fileID: 110894, guid: ca4ddb601c590c54a9cf75ce65429297, type: 2}
   - settlerUnit2: {fileID: 110894, guid: ca4ddb601c590c54a9cf75ce65429297, type: 2}
   - selectorParticle: {instanceID: 0}
   - MapBlocker: {instanceID: 0}
   - CameraNWEdge: {fileID: 109852, guid: 90733c3dc1e6b6f45a4281cb09d0d3d4, type: 2}
   - CameraSEEdge: {fileID: 107514, guid: a274daf7823ee07448dd4b3b2a4cb9b2, type: 2}
+  - groundPanel1: {fileID: 139256, guid: feb0fad1dce12b641b8fd91e0aae8bdf, type: 2}
+  - groundPanel2: {fileID: 125356, guid: 2acec8582bffa4af3af6ecbca495eef3, type: 2}
+  - groundPanel3: {fileID: 128604, guid: af291142a2b004eb9b64b5fc1fec636c, type: 2}
+  - groundPanel4: {fileID: 150274, guid: 2305fdfd71ab244e29d93cf4014eb303, type: 2}
+  - groundPanel5: {fileID: 146490, guid: f353c9b1bf4e0428ba4e249882e29472, type: 2}
   - GoldResource1: {fileID: 167716, guid: f0ef83b9fc0284f85ba2f5768c966412, type: 2}
   - GoldResource2: {fileID: 193778, guid: c7aac0175fd034f30886bf81c697e373, type: 2}
   - GoldResource3: {fileID: 129666, guid: 564c111b8377f48dbacfafe2a5a93d4c, type: 2}
-  - OilResource: {fileID: 198448, guid: 3a32c0fa7bd0a44259479042131f7baa, type: 2}
-  - OreResource: {fileID: 134274, guid: 6537a4e38ea18451f87df8eaa1a5ffbd, type: 2}
+  - OilResource: {fileID: 172280, guid: 91b7c7b162cc6491d810ba7824c2bd10, type: 2}
+  - OilResource2: {fileID: 122906, guid: ecdbbc87f81fc4736bb3db4185156bb5, type: 2}
+  - OilResource3: {fileID: 123098, guid: a6575f9c353e1483984a6ee58792737b, type: 2}
+  - OreResource: {fileID: 187156, guid: e88e64249b5324db3990415c68f2e60d, type: 2}
+  - OreResource2: {fileID: 149852, guid: 3d98957f7f1b7433a9271418428dfa69, type: 2}
+  - OreResource3: {fileID: 134342, guid: d40a1f1eaa5b342dd908af13cc9b96b7, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
