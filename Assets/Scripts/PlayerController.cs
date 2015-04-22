@@ -47,48 +47,54 @@ public class PlayerController {
 			currentUnit.GetComponent<PawnController>().TakeTurn ();
 
 			GameObject currentTile = currentUnit.GetComponent<PawnController>().currentTile;
-		
-			string tileType = currentTile.GetComponent<GroundScript>().tileType;
+			UnitType unitType = currentUnit.GetComponent<PawnController>().GetUnitType();
 
+			string tileType = currentTile.GetComponent<GroundScript>().tileType;
+			//string botType = (string)unitType;
 			//Debug.Log(tileType);
 
-			switch (tileType)
+			if(unitType == UnitType.WorkerBot)
 			{
-			case "Oil1":
-				oilCount++;
-				break;
 
-			case "Oil2":
-				oilCount += 2;
-				break;
+				switch (tileType)
+				{
+				case "Oil1":
+					oilCount++;
+					break;
 
-			case "Oil3":
-				oilCount +=3;
-				break;
+				case "Oil2":
+					oilCount += 2;
+					break;
 
-			case "Ore1":
-				oreCount++;
-				break;
+				case "Oil3":
+					oilCount +=3;
+					break;
 
-			case "Ore2":
-				oreCount += 2;
-				break;
+				case "Ore1":
+					oreCount++;
+					break;
 
-			case "Ore3":
-				oreCount += 3;
-				break;
+				case "Ore2":
+					oreCount += 2;
+					break;
 
-			case "Gold1":
-				goldCount++;
-				break;
+				case "Ore3":
+					oreCount += 3;
+					break;
 
-			case "Gold2":
-				goldCount += 2;
-				break;
+				case "Gold1":
+					goldCount++;
+					break;
 
-			case "Gold3":
-				goldCount += 3;
-				break;
+				case "Gold2":
+					goldCount += 2;
+					break;
+
+				case "Gold3":
+					goldCount += 3;
+					break;
+
+				}
 
 			}
 		}

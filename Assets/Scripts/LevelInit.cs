@@ -10,7 +10,7 @@ public class LevelInit : MonoBehaviour {
 
 	// init prefabs here, this is what we populate the field with
 	public GroundScript currentTile;
-	public GameObject groundPanel;
+	//public GameObject groundPanel;
 	public GameObject mainCamera;
 	public GameObject Resource1Panel;
 	public GameObject settlerUnit1;
@@ -19,6 +19,13 @@ public class LevelInit : MonoBehaviour {
 	public GameObject MapBlocker;
 	public GameObject CameraNWEdge;
 	public GameObject CameraSEEdge;
+
+
+	public GameObject groundPanel1;
+	public GameObject groundPanel2;
+	public GameObject groundPanel3;
+	public GameObject groundPanel4;
+	public GameObject groundPanel5;
 
 	public GameObject GoldResource1;
 	public GameObject GoldResource2;
@@ -59,8 +66,37 @@ public class LevelInit : MonoBehaviour {
 				// Ground
 				if(tileRoll > 0.1)
 				{
-					mapArray[i+1, j+1] = (GameObject)Instantiate(groundPanel, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
-					                                     transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
+					if(tileRoll > 0.1 && tileRoll < 0.28)
+					{
+						mapArray[i+1, j+1] = (GameObject)Instantiate(groundPanel1, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
+						                                  transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
+					}
+
+					else if(tileRoll >= 0.28 && tileRoll < 0.46)
+					{
+						mapArray[i+1, j+1] = (GameObject)Instantiate(groundPanel2, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
+						                                                                      transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
+					}
+
+					else if(tileRoll >= 0.46 && tileRoll < 0.5)
+					{
+						mapArray[i+1, j+1] = (GameObject)Instantiate(groundPanel3, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
+						                                                                      transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
+					}
+
+					else if(tileRoll >= 0.5 && tileRoll < 0.82)
+					{
+						mapArray[i+1, j+1] = (GameObject)Instantiate(groundPanel4, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
+						                                                                      transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
+					}
+
+					else
+					{
+						mapArray[i+1, j+1] = (GameObject)Instantiate(groundPanel5, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
+						                                                                      transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
+					}
+
+
 				}
 
 
