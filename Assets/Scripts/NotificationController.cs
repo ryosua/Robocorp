@@ -19,7 +19,9 @@ public class NotificationController : MonoBehaviour {
 	
 	}
 
-	public void ShowNotification () {
+	public void ShowNotification (string text) {
+		//TODO set the text
+
 		if (showingNotification == false) {
 			StartCoroutine ("FadeNotificationIn");
 		}
