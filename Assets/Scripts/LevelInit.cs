@@ -10,16 +10,23 @@ public class LevelInit : MonoBehaviour {
 
 	// init prefabs here, this is what we populate the field with
 	public GroundScript currentTile;
-	public GameObject groundPanel;
+	//public GameObject groundPanel;
 	public GameObject mainCamera;
-	public GameObject Resource1Panel;
+	//public GameObject Resource1Panel;
 	public GameObject settlerUnit1;
 	public GameObject settlerUnit2;
 	public GameObject selectorParticle;
 	public GameObject MapBlocker;
 	public GameObject CameraNWEdge;
 	public GameObject CameraSEEdge;
+	
 
+	public GameObject groundPanel1;
+	public GameObject groundPanel2;
+	public GameObject groundPanel3;
+	public GameObject groundPanel4;
+	public GameObject groundPanel5;
+	
 	public GameObject GoldResource1;
 	public GameObject GoldResource2;
 	public GameObject GoldResource3;
@@ -29,6 +36,7 @@ public class LevelInit : MonoBehaviour {
 	public GameObject OreResource;
 	public GameObject OreResource2;
 	public GameObject OreResource3;
+
 
 
 	// init players
@@ -55,86 +63,115 @@ public class LevelInit : MonoBehaviour {
 				// start panels with the middle at where this gameObject lies
 				// randomize panel placement
 				tileRoll = Random.value;
-			
+				
 				// Ground
 				if(tileRoll > 0.1)
 				{
-					mapArray[i+1, j+1] = (GameObject)Instantiate(groundPanel, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
-					                                     transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
+					if(tileRoll > 0.1 && tileRoll < 0.28)
+					{
+						mapArray[i+1, j+1] = (GameObject)Instantiate(groundPanel1, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
+						                                                                       transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
+					}
+					
+					else if(tileRoll >= 0.28 && tileRoll < 0.46)
+					{
+						mapArray[i+1, j+1] = (GameObject)Instantiate(groundPanel2, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
+						                                                                       transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
+					}
+					
+					else if(tileRoll >= 0.46 && tileRoll < 0.5)
+					{
+						mapArray[i+1, j+1] = (GameObject)Instantiate(groundPanel3, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
+						                                                                       transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
+					}
+					
+					else if(tileRoll >= 0.5 && tileRoll < 0.82)
+					{
+						mapArray[i+1, j+1] = (GameObject)Instantiate(groundPanel4, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
+						                                                                       transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
+					}
+					
+					else
+					{
+						mapArray[i+1, j+1] = (GameObject)Instantiate(groundPanel5, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
+						                                                                       transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
+					}
+					
+					
 				}
-
-
+				
+				
 				// Gold
 				else if(tileRoll >= 0 && tileRoll < 0.02)
 				{
 					if(tileRoll >= 0 && tileRoll < 0.01)
 					{
 						mapArray[i+1, j+1] = (GameObject)Instantiate(GoldResource1, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
-						                                  transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
+						                                                                        transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
 					}
-
+					
 					else if(tileRoll >= 0.01 && tileRoll < 0.016)
 					{
 						mapArray[i+1, j+1] = (GameObject)Instantiate(GoldResource2, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
-						                                  transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
+						                                                                        transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
 					}
-
+					
 					else
 					{
 						mapArray[i+1, j+1] = (GameObject)Instantiate(GoldResource3, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
-						                                  transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
+						                                                                        transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
 					}
-
-
+					
+					
 				}
-
+				
 				// Oil
 				else if(tileRoll >= 0.02 && tileRoll < 0.06)
 				{
 					if(tileRoll >= 0.02 && tileRoll < 0.04)
 					{
 						mapArray[i+1, j+1] = (GameObject)Instantiate(OilResource, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
-						                                  transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
+						                                                                      transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
 					}
 					
 					else if(tileRoll >= 0.04 && tileRoll < 0.052)
 					{
 						mapArray[i+1, j+1] = (GameObject)Instantiate(OilResource2, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
-						                                   transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
+						                                                                       transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
 					}
 					
 					else
 					{
 						mapArray[i+1, j+1] = (GameObject)Instantiate(OilResource3, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
-						                                   transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
+						                                                                       transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
 					}
-
-
+					
+					
 				}
-
+				
 				// Ore
 				else
 				{
 					if(tileRoll >= 0.06 && tileRoll < 0.08)
 					{
 						mapArray[i+1, j+1] = (GameObject)Instantiate(OreResource, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
-						                                  transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
+						                                                                      transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
 					}
 					
 					else if(tileRoll >= 0.08 && tileRoll < 0.092)
 					{
 						mapArray[i+1, j+1] = (GameObject)Instantiate(OreResource2, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
-						                                  transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
+						                                                                       transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
 					}
 					
 					else
 					{
 						mapArray[i+1, j+1] = (GameObject)Instantiate(OreResource3, new Vector3(transform.position.x - (panelSize * (levelWidth / 2)) + i*panelSize,
-						                                  transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
+						                                                                       transform.position.y - (panelSize * (levelLength / 2)) + j*panelSize), this.transform.rotation);
 					}
-
+					
 				}
-
+				
 				// Assign special.
 				GroundScript groundScript = mapArray[i+1, j+1].GetComponent<GroundScript> ();
 				AssignSpecial (groundScript);
