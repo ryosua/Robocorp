@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class NotificationController : MonoBehaviour {
 
 	public GameObject NotificationPanel;
-	public GameObject NotificationText;
+	public Text NotificationText;
 
 	private bool showingNotification = false;
 
@@ -12,6 +13,8 @@ public class NotificationController : MonoBehaviour {
 	void Start () {
 		// Hide the notification panel.
 		SetNotificationPanelAndTextAlpha (0);
+
+		//ShowNotification ("Test");
 	}
 	
 	// Update is called once per frame
@@ -20,7 +23,8 @@ public class NotificationController : MonoBehaviour {
 	}
 
 	public void ShowNotification (string text) {
-		//TODO set the text
+		// Change the text.
+		NotificationText.text = text;
 
 		if (showingNotification == false) {
 			StartCoroutine ("FadeNotificationIn");

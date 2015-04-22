@@ -13,7 +13,7 @@ public class Trap : Special {
 	public override void Reaction () {
 		// Destroy the selected pawn.
 		GetCameraControls ().selected.GetComponent<PawnController> ().Destroy ();
-		Debug.Log ("You hit a trap, your selected unit died :(");
+		GetCameraControls ().GetComponent<NotificationController> ().ShowNotification ("You hit a trap, your selected unit died!");
 	}
 	
 }

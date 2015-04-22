@@ -15,6 +15,6 @@ public class Bonus : Special {
 		PlayerController playerController = GetCameraControls() .GetPlayerController ();
 		playerController.goldCount = playerController.goldCount + bonusAmount;
 		GetCameraControls() .goldText.text = "Gold:	" + playerController.goldCount.ToString ();
-		Debug.Log ("You earned a bonus of " + bonusAmount + " gold!");
+		GetCameraControls ().GetComponent<NotificationController> ().ShowNotification ("You earned a bonus of " + bonusAmount + " gold!");
 	}
 }
