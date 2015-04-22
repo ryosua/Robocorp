@@ -1,15 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class BuyPlanetScript : MonoBehaviour {
 
-	public int goldToWin = 100;
+	public int goldToWin;
 	public GameObject MainCamera;
-	private CameraControls cameraControls;
+	public Text question;
+	private CameraControls camera;
 
 	public void OnBuyButtonClick ()
 	{
-		bool hasEnoughGold = cameraControls.GetPlayerController () .goldCount >= goldToWin;
+		bool hasEnoughGold = camera.GetPlayerController () .goldCount >= goldToWin;
 
 		if (hasEnoughGold == true) {
 			TriggerWin ();
@@ -18,7 +20,9 @@ public class BuyPlanetScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		cameraControls = MainCamera.GetComponent<CameraControls> ();
+		camera = MainCamera.GetComponent<CameraControls> ();
+		goldToWin = camera.winGoldCount;
+		question.text = "Buy the planet for " + camera.winGoldCount.ToString () + " Gold?";
 	}
 	
 	// Update is called once per frame
@@ -28,7 +32,7 @@ public class BuyPlanetScript : MonoBehaviour {
 
 	private void TriggerWin () {
 		// The other player loses the game.
-		int currentPlayer = cameraControls.currentPlayer;
+		int currentPlayer = camera.currentPlayer;
 		int loser;
 		if (currentPlayer == 1) {
 			loser = 2;
@@ -36,6 +40,6 @@ public class BuyPlanetScript : MonoBehaviour {
 		else {
 			loser = 1;
 		}
-		cameraControls.PlayerLoss(loser);
+		camera.PlayerLoss(loser);
 	}
 }
