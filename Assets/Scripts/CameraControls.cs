@@ -324,6 +324,7 @@ public class CameraControls : MonoBehaviour {
 		} 
 		else {
 			// show UI panel saying the player can't afford it
+			GetComponent<NotificationController> ().ShowNotification ("You can not afford this robot.");
 		}
 		
 		// The unit has been placed.
