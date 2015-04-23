@@ -24,11 +24,14 @@ public class CameraControls : MonoBehaviour {
 	public Text goldText;
 	public Text oreText;
 	public Text lossText;
+	public Text GoalText;
 	public Button endTurn;
 	public Button lossButton;
 	public Button buildButton;
 	public GameObject actionPanel;
 	public GameObject lossPanel;
+	public GameObject BuyPlanetPanel;
+	public GameObject TradingPanel;
 
 	// red unit prefabs
 	public GameObject SettlerBotRedPrefab;
@@ -51,6 +54,11 @@ public class CameraControls : MonoBehaviour {
 
 	// turn bool
 	int turn;
+
+	// trading values
+	public int oreConversion;
+	public int oilConversion;
+	public int winGoldCount;
 
 	// camera move bool
 	bool moveBool;
@@ -88,6 +96,33 @@ public class CameraControls : MonoBehaviour {
 		cameraMax = 10;
 		cameraMin = 1;
 		scrollValue = 0F;
+	}
+
+	// trade function for resources to gold. 1 for ore, 2 for oil
+	public void TradeforGold(int function) {
+
+		// get current player
+		PlayerController callingPlayer = GetPlayerController ();
+
+		// get function, see if trade is possible
+		if (function == 1) {
+
+			//trade ore
+			if (callingPlayer.oreCount >= oreConversion) {
+				callingPlayer.oreCount -= oreConversion;
+				callingPlayer.goldCount += 1;
+				UIResourceUpdate();
+			}
+		} 
+		else {
+
+			//trade oil
+			if (callingPlayer.oilCount >= oilConversion) {
+				callingPlayer.oilCount -= oilConversion;
+				callingPlayer.goldCount += 1;
+				UIResourceUpdate();
+			}
+		}
 	}
 
 	// sets camera focus on end turn for the given player, the camera flies to this object on their turn start
@@ -241,8 +276,17 @@ public class CameraControls : MonoBehaviour {
 
 	// function to update resource UI
 	public void UIResourceUpdate() {
+
 		// update all UI text as above on resource panel
 		PlayerController player = GetPlayerController ();
+
+		if (player.goldCount >= winGoldCount) {
+			BuyPlanetPanel.SetActive (true);
+			GoalText.text = "0 Gold to Win";
+		} 
+		else {
+			GoalText.text = (winGoldCount - player.goldCount).ToString () + " Gold to Win";
+		}
 
 		oilText.text = "Oil:\t" + player.oilCount.ToString ();
 		goldText.text = "Gold:\t" + player.goldCount.ToString ();
