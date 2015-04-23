@@ -293,6 +293,31 @@ public class CameraControls : MonoBehaviour {
 		oreText.text = "Ore:\t" + player.oreCount.ToString ();
 	}
 
+	// mine a tile (claim territory)
+	public void MineTile() {
+
+		// make sure we have *something* selected
+		if (lastSelected != null) {
+
+			PawnController worker = lastSelected.GetComponent<PawnController>();
+			GroundScript mineTile = worker.currentTile.GetComponent<GroundScript>();
+
+			// check if this is a mineable tile
+			if (mineTile.isResource == true) {
+
+				// check if worker has actions left
+				if (worker.currentActions > 0) {
+
+					// subtract action, change sprite
+					worker.currentActions -= 1;
+					mineTile.ClaimTerritory(currentPlayer);
+
+					// add territory to total for player
+				}
+			}
+		}
+	}
+
 	// function to choose the unit to spawn based off of unittype
 	public void SpawnSelection (UnitType unit) {
 

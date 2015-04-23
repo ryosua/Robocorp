@@ -77,6 +77,10 @@ public class BuildController : MonoBehaviour {
 		print ("Melee bought");
 	}
 
+	public void OnMineClick() {
+		cameraControls.MineTile ();
+	}
+
 	// Use this for initialization
 	void Start () {
 		cameraControls = MainCamera.GetComponent<CameraControls> ();

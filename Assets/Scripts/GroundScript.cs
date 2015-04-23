@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class GroundScript : MonoBehaviour {
 
@@ -8,7 +9,11 @@ public class GroundScript : MonoBehaviour {
 	public GameObject left_block;
 	public GameObject right_block;
 	public GameObject occupiedObject;
+	public Sprite blue_territory;
+	public Sprite red_territory;
+	public Sprite neutral_territory;
 	public bool occupied;
+	public bool isResource;
 
 	// public string for the tile type
 	public string tileType;
@@ -23,6 +28,23 @@ public class GroundScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
+	}
+
+	// function to claim game territory
+	public void ClaimTerritory(int currentPlayer) {
+
+		if (isResource) {
+
+			if (currentPlayer == 1) {
+				transform.gameObject.GetComponent<SpriteRenderer> ().sprite = red_territory;
+			} else {
+				transform.gameObject.GetComponent<SpriteRenderer> ().sprite = blue_territory;
+			}
+		}
+	}
+
+	public void LoseTerritory() {
+		transform.gameObject.GetComponent<SpriteRenderer> ().sprite = neutral_territory;
 	}
 
 	public Special getSpecial () {
