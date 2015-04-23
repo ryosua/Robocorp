@@ -134,20 +134,39 @@ public class PawnController : Pawn {
 			// check if we are moving to a valid space
 			if (nextTile != null) {
 
-				// If the tile has a special, trigger the encounter.
-				Special special = groundScript.getSpecial ();
-				if (special != null) {
-					special.OnSpecialEncounter ();
-				}
-
 				// check if unit is commandable
 				if (commandable == true) {
 
+					GroundScript nextGround = nextTile.GetComponent<GroundScript>();
+
 					// check if the tile is occupied
-					if (nextTile.GetComponent<GroundScript>().occupied != true) {
+					if (nextGround.occupied != true) {
 
 						// check if the pawn has moves left
 						if (currentMoves > 0) {
+
+							// If the tile has a special, trigger the encounter.
+							Special special = groundScript.getSpecial ();
+							if (special != null) {
+								special.OnSpecialEncounter ();
+							}
+
+							// check if tile is an owned piece of enemy territory, remove claim if so
+							if ((nextGround.isClaimed > 0)&&(nextGround.isClaimed != owningPlayer)) {
+
+								// remove claim
+								nextGround.isClaimed = 0;
+
+								// remove territory from enemy player
+								if(owningPlayer == 1) {
+									mainCamera.GetComponent<CameraControls>().levelInit.GetComponent<LevelInit>().player2.RemoveTerritory(nextGround);
+								}
+								else {
+									mainCamera.GetComponent<CameraControls>().levelInit.GetComponent<LevelInit>().player1.RemoveTerritory(nextGround);
+								}
+
+								nextTile.GetComponent<SpriteRenderer>().sprite = nextGround.neutral_territory;
+							}
 						
 							// set move coord when called
 							moveCoordinates = nextTile.transform.position;
@@ -158,8 +177,8 @@ public class PawnController : Pawn {
 							// set occupied for current, next tile
 							groundScript.occupied = false;
 							groundScript.occupiedObject = null;
-							nextTile.GetComponent<GroundScript>().occupied = true;
-							nextTile.GetComponent<GroundScript>().occupiedObject = transform.gameObject;
+							nextGround.occupied = true;
+							nextGround.occupiedObject = transform.gameObject;
 
 							// set new currentTile
 							currentTile = nextTile;

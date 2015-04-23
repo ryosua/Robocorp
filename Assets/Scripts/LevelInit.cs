@@ -268,10 +268,10 @@ public class LevelInit : MonoBehaviour {
 	private void AssignSpecial (GroundScript groundScript) {
 		CameraControls cameraControls = mainCamera.GetComponent<CameraControls> ();
 		float specialValue = Random.value;
-		if (specialValue <= 0.10) {
+		if (specialValue <= 0.04) {
 			groundScript.SetSpecial(new Bonus (cameraControls));
 		}
-		else if (specialValue >= 0.11 && specialValue <= 0.16) {
+		else if (specialValue >= 0.041 && specialValue <= 0.065) {
 			groundScript.SetSpecial(new Trap (cameraControls));
 		}
 	}

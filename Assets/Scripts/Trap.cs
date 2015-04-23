@@ -8,12 +8,12 @@ public class Trap : Special {
 	}
 	
 	/*
-		A trap destroys the robot that encounters it.
+		A trap halves the health of the robot that encounters it.
 	*/
 	public override void Reaction () {
 		// Destroy the selected pawn.
-		GetCameraControls ().selected.GetComponent<PawnController> ().Destroy ();
-		GetCameraControls ().GetComponent<NotificationController> ().ShowNotification ("You hit a trap, your selected unit died!");
+		GetCameraControls ().selected.GetComponent<PawnController> ().health = Mathf.CeilToInt(GetCameraControls ().selected.GetComponent<PawnController> ().health / 2);
+		GetCameraControls ().GetComponent<NotificationController> ().ShowNotification ("You hit a trap, your unit's health was halved!");
 	}
 	
 }

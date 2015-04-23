@@ -15,11 +15,8 @@ public class BuildController : MonoBehaviour {
 
 	UnitType unit;
 
-	// vector for movement target (always lerps here)
-	public Vector3 moveCoordinates;
-	Vector3 oldPos;
-	public bool moveBool;
-	float speed;
+	// menu control counter
+	int actionMenuOpen;
 
 	public void OnBuildBaseBotClick () {
 
@@ -88,7 +85,20 @@ public class BuildController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		// handle hotkey button (a)
+		if (Input.GetKeyDown ("a")) {
+			if (actionMenuOpen == 0 ) {
+				SetBuildMenuVisible(true);
 
+				if (cameraControls.selected != null) {
+					ShowUnitPanel(cameraControls.selected.GetComponent<PawnController>().GetUnitType());
+				}
+			}
+			else {
+				SetBuildMenuVisible(false);
+				CloseBuildPanel();
+			}
+		}
 	}
 
 	public void ShowUnitPanel (UnitType unitType) {
@@ -142,12 +152,14 @@ public class BuildController : MonoBehaviour {
 				// The button should not be shown here becuase the selected unit does not have any corresponding actions.
 				break;
 		}
+		actionMenuOpen = 1;
 	}
 
 	public void CloseBuildPanel () {
 
 		// clear build panel in any case
 		SetBuildMenuVisible (false);
+		actionMenuOpen = 0;
 	}
 
 	public UnitType getSelectedPawnType() {
@@ -155,16 +167,20 @@ public class BuildController : MonoBehaviour {
 		
 		CameraControls camera = MainCamera.GetComponent<CameraControls> ();
 		GameObject lastSelected = camera.lastSelected;
+		if (lastSelected == null) {
+			lastSelected = camera.selected;
+			if (lastSelected == null) {
+				return UnitType.None;
+			}
+		}
 		PawnController pawn = lastSelected.GetComponent<PawnController> ();
 		type = pawn.GetUnitType ();
 		
 		return type;
 	}
 
+	// function to open or close menu
 	public void SetBuildMenuVisible (bool visible) {
-
-		// set move control to true
-		moveBool = true;
 
 		BuildPanel.SetActive (visible);
 	}

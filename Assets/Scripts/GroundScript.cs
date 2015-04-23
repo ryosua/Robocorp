@@ -14,6 +14,7 @@ public class GroundScript : MonoBehaviour {
 	public Sprite neutral_territory;
 	public bool occupied;
 	public bool isResource;
+	public int isClaimed;
 
 	// public string for the tile type
 	public string tileType;
@@ -23,6 +24,7 @@ public class GroundScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		occupied = false;
+		isClaimed = 0;
 	}
 
 	// Update is called once per frame

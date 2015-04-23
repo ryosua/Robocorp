@@ -11,7 +11,7 @@ public class Bonus : Special {
 		A bonus gives the player a bonus of 10 gold.
 	*/
 	public override void Reaction () {
-		int bonusAmount = 10;
+		int bonusAmount = 5;
 		CameraControls cameraControls = GetCameraControls ();
 		PlayerController playerController = cameraControls.GetPlayerController ();
 		playerController.goldCount = playerController.goldCount + bonusAmount;

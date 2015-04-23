@@ -16,6 +16,10 @@ public class PlayerController {
 	public int goldCount;
 	public int oilCount;
 
+	public int oreTerritory;
+	public int goldTerritory;
+	public int oilTerritory;
+
 	// function to place default values to start game
 	public void InitPlayer(int player_num, int startOre, int startGold, int startOil) {
 
@@ -27,6 +31,10 @@ public class PlayerController {
 		oreCount = startOre;
 		goldCount = startGold;
 		oilCount = startOil;
+
+		oreTerritory = 0;
+		goldTerritory = 0;
+		oilTerritory = 0;
 
 	}
 
@@ -61,6 +69,9 @@ public class PlayerController {
 
 		GameObject currentUnit;
 
+		goldCount += goldTerritory;
+		oreCount += oreTerritory;
+		oilCount += oilTerritory;
 
 		// while we aren't at the end of the list...
 		while (e.MoveNext()) {
@@ -166,6 +177,68 @@ public class PlayerController {
 				// break from while loop
 				break;
 			}
+		}
+	}
+
+	// add territory based off of tiletype
+	public void AddTerritory(GroundScript tile) {
+
+		switch (tile.tileType)
+		{
+		case "Oil1":
+			
+		case "Oil2":
+			
+		case "Oil3":
+			oilTerritory++;
+			break;
+			
+		case "Ore1":
+			
+		case "Ore2":
+			
+		case "Ore3":
+			oreTerritory++;
+			break;
+			
+		case "Gold1":
+			
+		case "Gold2":
+			
+		case "Gold3":
+			goldTerritory++;
+			break;
+			
+		}
+	}
+
+	public void RemoveTerritory(GroundScript tile) {
+		switch (tile.tileType)
+		{
+		case "Oil1":
+			
+		case "Oil2":
+			
+		case "Oil3":
+			oilTerritory--;
+			break;
+			
+		case "Ore1":
+			
+		case "Ore2":
+			
+		case "Ore3":
+			oreTerritory--;
+			break;
+			
+		case "Gold1":
+			
+		case "Gold2":
+			
+		case "Gold3":
+			goldTerritory--;
+			break;
+			
 		}
 	}
 
