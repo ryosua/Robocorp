@@ -12,9 +12,11 @@ public class Bonus : Special {
 	*/
 	public override void Reaction () {
 		int bonusAmount = 10;
-		PlayerController playerController = GetCameraControls() .GetPlayerController ();
+		CameraControls cameraControls = GetCameraControls ();
+		PlayerController playerController = cameraControls.GetPlayerController ();
 		playerController.goldCount = playerController.goldCount + bonusAmount;
-		GetCameraControls() .goldText.text = "Gold:	" + playerController.goldCount.ToString ();
-		GetCameraControls ().GetComponent<NotificationController> ().ShowNotification ("You earned a bonus of " + bonusAmount + " gold!");
+		cameraControls.goldText.text = "Gold:	" + playerController.goldCount.ToString ();
+		NotificationController notifcationController = cameraControls.GetComponent<NotificationController> ();
+		notifcationController.ShowNotification ("You earned a bonus of " + bonusAmount + " gold!");
 	}
 }
