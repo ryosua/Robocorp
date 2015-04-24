@@ -7,6 +7,12 @@ public class PanelScript : MonoBehaviour {
 	public GameObject redImage;
 	public GameObject blueImage;
 
+	public GameObject prefab;
+
+	public Text orePrice;
+	public Text goldPrice;
+	public Text oilPrice;
+
 
 	// Use this for initialization
 	void Start () {

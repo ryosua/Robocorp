@@ -2,7 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-public class CameraControls : MonoBehaviour {
+public class CameraControls : MonoBehaviour
+{
 
 	RaycastHit2D hit;
 	public GameObject hitObject;
@@ -85,7 +86,8 @@ public class CameraControls : MonoBehaviour {
 	public UnitType UnitToPlace { get; set; }
 		
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 		UnitToPlace = UnitType.None;
 		currentPlayer = 1;
 		moveBool = false;
@@ -99,7 +101,8 @@ public class CameraControls : MonoBehaviour {
 	}
 
 	// trade function for resources to gold. 1 for ore, 2 for oil
-	public void TradeforGold(int function) {
+	public void TradeforGold (int function)
+	{
 
 		// get current player
 		PlayerController callingPlayer = GetPlayerController ();
@@ -111,32 +114,32 @@ public class CameraControls : MonoBehaviour {
 			if (callingPlayer.oreCount >= oreConversion) {
 				callingPlayer.oreCount -= oreConversion;
 				callingPlayer.goldCount += 1;
-				UIResourceUpdate();
+				UIResourceUpdate ();
 			}
-		} 
-		else {
+		} else {
 
 			//trade oil
 			if (callingPlayer.oilCount >= oilConversion) {
 				callingPlayer.oilCount -= oilConversion;
 				callingPlayer.goldCount += 1;
-				UIResourceUpdate();
+				UIResourceUpdate ();
 			}
 		}
 	}
 
 	// sets camera focus on end turn for the given player, the camera flies to this object on their turn start
-	void SetBase(int playerID, GameObject baseObject) {
+	void SetBase (int playerID, GameObject baseObject)
+	{
 		if (playerID == 1) {
 			player1Base = baseObject;
-		} 
-		else if (playerID == 2) {
+		} else if (playerID == 2) {
 			player2Base = baseObject;
 		}
 	}
 
 	// function to grab selector particle (called in init after it is created
-	void SetParams() {
+	void SetParams ()
+	{
 
 		// setup camera params
 		selectorParticle = GameObject.FindGameObjectWithTag ("Selector Particle");
@@ -145,7 +148,8 @@ public class CameraControls : MonoBehaviour {
 	}
 
 	// set camera to other player between turns
-	public void TakeTurn() {
+	public void TakeTurn ()
+	{
 		if (turn == 1) {
 
 			// do turn bookkeeping
@@ -156,24 +160,24 @@ public class CameraControls : MonoBehaviour {
 			MoveTo (player2Base);
 			currentPlayer = 2;
 			playerText.text = "Player 2";
-			UIResourceUpdate();
-		} 
-		else {
+			UIResourceUpdate ();
+		} else {
 
 			// do turn bookkeeping
-			levelInit.GetComponent<LevelInit>().player1.TakeTurn ();
+			levelInit.GetComponent<LevelInit> ().player1.TakeTurn ();
 			turn = 1;
 
 			// move camera to player 1's base
 			MoveTo (player1Base);
 			currentPlayer = 1;
 			playerText.text = "Player 1";
-			UIResourceUpdate();
+			UIResourceUpdate ();
 		}
 	}
 
 	// function to end game (given player number loses)
-	public void PlayerLoss(int playerNumber) {
+	public void PlayerLoss (int playerNumber)
+	{
 
 		// enable loss panel
 		lossPanel.SetActive (true);
@@ -181,27 +185,28 @@ public class CameraControls : MonoBehaviour {
 		// check who lost, set text accordingly
 		if (playerNumber == 1) {
 			lossText.text = "Player 2 Wins!";
-		}
-		else {
+		} else {
 			lossText.text = "Player 1 Wins!";
 		}
 	}
 
 	// function to freely move camera to a target
-	public void MoveTo(GameObject target) {
-		moveCoordinates = new Vector3(target.transform.position.x, target.transform.position.y, -10);
+	public void MoveTo (GameObject target)
+	{
+		moveCoordinates = new Vector3 (target.transform.position.x, target.transform.position.y, -10);
 		moveBool = true; 
 	}
 
 	// function to set up UI when a pawn is clicked;
-	void UIUpdatePawnInfo(GameObject target, int owned) {
+	void UIUpdatePawnInfo (GameObject target, int owned)
+	{
 		// set color and correct numbers for moves/actions on UI
 
 		// check if we have selected something
 		if (target != null) {
 
 			// check if the unit even has a pawn controller
-			PawnController targetUnit = target.GetComponent<PawnController>();
+			PawnController targetUnit = target.GetComponent<PawnController> ();
 
 			if (owned == 1) {
 				// if it is movable, display moves and actions
@@ -226,12 +231,11 @@ public class CameraControls : MonoBehaviour {
 				attackText.text = "Attack Power:\t" + targetUnit.attackDamage.ToString ();
 
 				// activate actionPanel color
-				actionPanel.GetComponent<Image>().color = Color.red;
+				actionPanel.GetComponent<Image> ().color = Color.red;
 
 				// Check unit type, build button for unit
 
-			}
-			else {
+			} else {
 				healthText.color = Color.black;
 				healthText.text = "Unit Health:\t\t" + targetUnit.health.ToString ();
 
@@ -244,13 +248,14 @@ public class CameraControls : MonoBehaviour {
 				attackText.color = Color.grey;
 				attackText.text = "Attack Power:";
 
-				actionPanel.GetComponent<Image>().color = Color.black;
+				actionPanel.GetComponent<Image> ().color = Color.black;
 			}
 		}
 	}
 
 	// function to remove UI elements when a pawn is clicked
-	void UIDeselectPawn() {
+	void UIDeselectPawn ()
+	{
 		// assume no pawn is selected now
 		moveText.color = Color.grey;
 		moveText.text = "Moves Remaining:";
@@ -265,7 +270,7 @@ public class CameraControls : MonoBehaviour {
 		attackText.text = "Attack Power:";
 		
 		// activate actionPanel color
-		actionPanel.GetComponent<Image>().color = Color.grey;
+		actionPanel.GetComponent<Image> ().color = Color.grey;
 
 		if (lastSelected != null) {
 			if (lastSelected.GetComponent<PawnController> ().canAct != true) {
@@ -275,7 +280,8 @@ public class CameraControls : MonoBehaviour {
 	}
 
 	// function to update resource UI
-	public void UIResourceUpdate() {
+	public void UIResourceUpdate ()
+	{
 
 		// update all UI text as above on resource panel
 		PlayerController player = GetPlayerController ();
@@ -283,8 +289,7 @@ public class CameraControls : MonoBehaviour {
 		if (player.goldCount >= winGoldCount) {
 			BuyPlanetPanel.SetActive (true);
 			GoalText.text = "0 Gold to Win";
-		} 
-		else {
+		} else {
 			GoalText.text = (winGoldCount - player.goldCount).ToString () + " Gold to Win";
 		}
 
@@ -294,13 +299,14 @@ public class CameraControls : MonoBehaviour {
 	}
 
 	// mine a tile (claim territory)
-	public void MineTile() {
+	public void MineTile ()
+	{
 
 		// make sure we have *something* selected
 		if (lastSelected != null) {
 
-			PawnController worker = lastSelected.GetComponent<PawnController>();
-			GroundScript mineTile = worker.currentTile.GetComponent<GroundScript>();
+			PawnController worker = lastSelected.GetComponent<PawnController> ();
+			GroundScript mineTile = worker.currentTile.GetComponent<GroundScript> ();
 
 			// check if this is a mineable tile
 			if (mineTile.isResource == true) {
@@ -310,18 +316,19 @@ public class CameraControls : MonoBehaviour {
 
 					// subtract action, change sprite
 					worker.currentActions -= 1;
-					mineTile.ClaimTerritory(currentPlayer);
+					mineTile.ClaimTerritory (currentPlayer);
 					mineTile.isClaimed = currentPlayer;
 
 					// add territory to total for player
-					GetPlayerController().AddTerritory(mineTile);
+					GetPlayerController ().AddTerritory (mineTile);
 				}
 			}
 		}
 	}
 
 	// function to choose the unit to spawn based off of unittype
-	public void SpawnSelection (UnitType unit) {
+	public void SpawnSelection (UnitType unit)
+	{
 
 		UnitToPlace = unit;
 		GameObject chosenPrefab = null;
@@ -374,26 +381,23 @@ public class CameraControls : MonoBehaviour {
 				break;
 			default:
 				throw new UnityException ("Built a unit with an unsupported UnitType");
-				//break;
+			//break;
 			}
 		}
 
 		if ((player.BuyUnit (chosenPrefab)) == 0) {
-			if ((chosenPrefab = (GameObject)(SpawnPawn (chosenPrefab, lastSelected.GetComponent<PawnController>().currentTile, currentPlayer, UnitToPlace))) == null) {
+			if ((chosenPrefab = (GameObject)(SpawnPawn (chosenPrefab, lastSelected.GetComponent<PawnController> ().currentTile, currentPlayer, UnitToPlace))) == null) {
 				// show UI panel saying no valid spawn location around building unit
-			}
-			else {
+			} else {
 				if (resetBase) {
 					if (currentPlayer == 1) {
 						player1Base = chosenPrefab;
-					}
-					else {
+					} else {
 						player2Base = chosenPrefab;
 					}
 				}
 			}
-		} 
-		else {
+		} else {
 			// show UI panel saying the player can't afford it
 			GetComponent<NotificationController> ().ShowNotification ("You can not afford this robot.");
 		}
@@ -404,7 +408,8 @@ public class CameraControls : MonoBehaviour {
 	}
 
 	// spawn an arbitrary pawn at spawnTileLocation. Spawns beside tile location (or not at all)
-	public GameObject SpawnPawn(GameObject spawnPrefab, GameObject spawnTileLocation, int owningPlayer, UnitType unitType) {
+	public GameObject SpawnPawn (GameObject spawnPrefab, GameObject spawnTileLocation, int owningPlayer, UnitType unitType)
+	{
 
 		// check if this tile exists
 		if (spawnTileLocation != null) {
@@ -454,21 +459,21 @@ public class CameraControls : MonoBehaviour {
 	}
 
 	// private spawn method to handle bookkeeping
-	GameObject Spawn(GameObject spawnPrefab, GameObject spawnTileLocation, int owningPlayer, UnitType unitType) {
+	GameObject Spawn (GameObject spawnPrefab, GameObject spawnTileLocation, int owningPlayer, UnitType unitType)
+	{
 
 		// instantiate the pawn, set it's tile, set it's owner, set the tile's occupancy
 		spawnPrefab = (GameObject)Instantiate (spawnPrefab, spawnTileLocation.transform.position, spawnTileLocation.transform.rotation);
-		spawnPrefab.BroadcastMessage("SetTile", spawnTileLocation);
+		spawnPrefab.BroadcastMessage ("SetTile", spawnTileLocation);
 		spawnPrefab.BroadcastMessage ("SetOwner", owningPlayer);
 		spawnPrefab.BroadcastMessage ("SetCamera", transform.gameObject);
 		spawnPrefab.GetComponent<PawnController> ().currentTile.GetComponent<GroundScript> ().SetOccupant (spawnPrefab);
 		
 		// add settler to the owning player's unit list, set unit's unitID
 		if (owningPlayer == 1) {
-			spawnPrefab.GetComponent<PawnController>().unitID = levelInit.GetComponent<LevelInit>().player1.AddUnit(spawnPrefab);
-		}
-		else {
-			spawnPrefab.GetComponent<PawnController>().unitID = levelInit.GetComponent<LevelInit>().player2.AddUnit(spawnPrefab);
+			spawnPrefab.GetComponent<PawnController> ().unitID = levelInit.GetComponent<LevelInit> ().player1.AddUnit (spawnPrefab);
+		} else {
+			spawnPrefab.GetComponent<PawnController> ().unitID = levelInit.GetComponent<LevelInit> ().player2.AddUnit (spawnPrefab);
 		}
 
 		spawnPrefab.GetComponent<PawnController> ().SetUnitType (unitType);
@@ -477,7 +482,8 @@ public class CameraControls : MonoBehaviour {
 	}
 	
 	// Update is called once per frame; here we handle selection, deselection, movement
-	void Update(){
+	void Update ()
+	{
 
 		mouseX = Input.mousePosition.x;
 		mouseY = Input.mousePosition.y;
@@ -486,51 +492,47 @@ public class CameraControls : MonoBehaviour {
 		// if we left click in the camera, select the pawn (if selectable)
 		if (Input.GetMouseButtonDown (0)) {
 
-			// don't record clicks on the UI
-			if (mouseY > 60) {
-
-				// cast a ray to see what was clicked
-				hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint (Input.mousePosition), Vector2.zero);
+			// cast a ray to see what was clicked
+			hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint (Input.mousePosition), Vector2.zero);
 			
-				if (hit.collider != null) {
-					if ((hit.transform.gameObject.tag == "Selectable") || (hit.transform.gameObject.tag == "Selectable and Movable")) {
+			if (hit.collider != null) {
+				if ((hit.transform.gameObject.tag == "Selectable") || (hit.transform.gameObject.tag == "Selectable and Movable")) {
 
-						// make sure the current player owns this pawn
-						if (hit.transform.gameObject.GetComponent<PawnController> ().owningPlayer == currentPlayer) {
+					// make sure the current player owns this pawn
+					if (hit.transform.gameObject.GetComponent<PawnController> ().owningPlayer == currentPlayer) {
 
-							// update selection
-							selected = hit.transform.gameObject;
-							selectorParticle.GetComponent<ParticleBase> ().selectedPawn = selected;
+						// update selection
+						selected = hit.transform.gameObject;
+						selectorParticle.GetComponent<ParticleBase> ().selectedPawn = selected;
 
-							// move selection particle
-							selectorParticle.BroadcastMessage ("FlashTo", selected.transform.gameObject);
-							selectorParticle.BroadcastMessage ("StartParticle");
+						// move selection particle
+						selectorParticle.BroadcastMessage ("FlashTo", selected.transform.gameObject);
+						selectorParticle.BroadcastMessage ("StartParticle");
 
-							// update UI (flush it really quick in case we are going from one pawn to another
-							UIDeselectPawn ();
-							UIUpdatePawnInfo (selected, 1);
-						}
+						// update UI (flush it really quick in case we are going from one pawn to another
+						UIDeselectPawn ();
+						UIUpdatePawnInfo (selected, 1);
+					}
 
 					// if it is an enemy player, show health
 					else {
-							UIUpdatePawnInfo (hit.transform.gameObject, 0);
-						}
+						UIUpdatePawnInfo (hit.transform.gameObject, 0);
 					}
+				}
 
 				// deselection code
 				else {
-						// Save the last pawn selected so when the player clicks the build button we know which panels to show.
-						if (selected != null) {
-							lastSelected = selected;
-						}
-
-						// deselect pawn, move selection particle off screen
-						selected = null;
-						selectorParticle.BroadcastMessage ("FlashTo", CameraSEEdge.transform.gameObject);
-
-						// update UI
-						UIDeselectPawn ();
+					// Save the last pawn selected so when the player clicks the build button we know which panels to show.
+					if (selected != null) {
+						lastSelected = selected;
 					}
+
+					// deselect pawn, move selection particle off screen
+					selected = null;
+					selectorParticle.BroadcastMessage ("FlashTo", CameraSEEdge.transform.gameObject);
+
+					// update UI
+					UIDeselectPawn ();
 				}
 			}
 		}
@@ -544,7 +546,7 @@ public class CameraControls : MonoBehaviour {
 			// check if we hit a valid panel
 			if (hit.collider != null) {
 				// check if there is actually something selected
-				if(selected != null) {
+				if (selected != null) {
 					// check if we are moving to an invalid block
 					if ((hit.transform.gameObject.tag != ("MovementBlocker"))) {
 
@@ -558,36 +560,33 @@ public class CameraControls : MonoBehaviour {
 							if (Mathf.Abs (xDist) >= Mathf.Abs (yDist)) {
 								
 								if (xDist > 0) {
-									if (selected.GetComponent<PawnController>().MoveTo(4) == 0) {
-										moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
+									if (selected.GetComponent<PawnController> ().MoveTo (4) == 0) {
+										moveCoordinates = new Vector3 (selected.GetComponent<PawnController> ().moveCoordinates.x, selected.GetComponent<PawnController> ().moveCoordinates.y, -10);
+										moveBool = true;
+									}
+								} else {
+									if (selected.GetComponent<PawnController> ().MoveTo (3) == 0) {
+										moveCoordinates = new Vector3 (selected.GetComponent<PawnController> ().moveCoordinates.x, selected.GetComponent<PawnController> ().moveCoordinates.y, -10);
 										moveBool = true;
 									}
 								}
-								else {
-									if (selected.GetComponent<PawnController>().MoveTo(3) == 0) {
-										moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
-										moveBool = true;
-									}
-								}
-							}
-							else {
+							} else {
 								
 								if (yDist > 0) {
-									if (selected.GetComponent<PawnController>().MoveTo(1) == 0) {
-										moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
+									if (selected.GetComponent<PawnController> ().MoveTo (1) == 0) {
+										moveCoordinates = new Vector3 (selected.GetComponent<PawnController> ().moveCoordinates.x, selected.GetComponent<PawnController> ().moveCoordinates.y, -10);
 										moveBool = true;
 									}
-								}
-								else {
-									if (selected.GetComponent<PawnController>().MoveTo(2) == 0) {
-										moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
+								} else {
+									if (selected.GetComponent<PawnController> ().MoveTo (2) == 0) {
+										moveCoordinates = new Vector3 (selected.GetComponent<PawnController> ().moveCoordinates.x, selected.GetComponent<PawnController> ().moveCoordinates.y, -10);
 										moveBool = true;
 									}
 								}
 							}
 						}
 						// update UI
-						UIUpdatePawnInfo(selected, 1);
+						UIUpdatePawnInfo (selected, 1);
 					}
 				}
 			}
@@ -596,66 +595,66 @@ public class CameraControls : MonoBehaviour {
 		}
 
 		// if we hit up key
-		else if (Input.GetKeyDown("up")) {
+		else if (Input.GetKeyDown ("up")) {
 
 			// if we hit keys while something is selected...
 			if (selected != null) {
 
-				if (selected.GetComponent<PawnController>().MoveTo(1) == 0) {
-					moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
+				if (selected.GetComponent<PawnController> ().MoveTo (1) == 0) {
+					moveCoordinates = new Vector3 (selected.GetComponent<PawnController> ().moveCoordinates.x, selected.GetComponent<PawnController> ().moveCoordinates.y, -10);
 					moveBool = true;
 				}
 
 				// update UI
-				UIUpdatePawnInfo(selected, 1);
+				UIUpdatePawnInfo (selected, 1);
 			}
 		}
 
 		// if we hit down key
-		else if (Input.GetKeyDown("down")) {
+		else if (Input.GetKeyDown ("down")) {
 
 			// if we hit keys while something is selected...
 			if (selected != null) {
 				
-				if (selected.GetComponent<PawnController>().MoveTo(2) == 0) {
-					moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
+				if (selected.GetComponent<PawnController> ().MoveTo (2) == 0) {
+					moveCoordinates = new Vector3 (selected.GetComponent<PawnController> ().moveCoordinates.x, selected.GetComponent<PawnController> ().moveCoordinates.y, -10);
 					moveBool = true;
 				}
 
 				// update UI
-				UIUpdatePawnInfo(selected, 1);
+				UIUpdatePawnInfo (selected, 1);
 			}
 		}
 
 		// if we hit left key
-		else if (Input.GetKeyDown("left")) {
+		else if (Input.GetKeyDown ("left")) {
 
 			// if we hit keys while something is selected...
 			if (selected != null) {
 				
-				if (selected.GetComponent<PawnController>().MoveTo(3) == 0) {
-					moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
+				if (selected.GetComponent<PawnController> ().MoveTo (3) == 0) {
+					moveCoordinates = new Vector3 (selected.GetComponent<PawnController> ().moveCoordinates.x, selected.GetComponent<PawnController> ().moveCoordinates.y, -10);
 					moveBool = true;
 				}
 
 				// update UI
-				UIUpdatePawnInfo(selected, 1);
+				UIUpdatePawnInfo (selected, 1);
 			}
 		}
 
 		// if we hit right key
-		else if (Input.GetKeyDown("right")) {
+		else if (Input.GetKeyDown ("right")) {
 
 			// if we hit keys while something is selected...
 			if (selected != null) {
 				
-				if (selected.GetComponent<PawnController>().MoveTo(4) == 0) {
-					moveCoordinates = new Vector3(selected.GetComponent<PawnController>().moveCoordinates.x, selected.GetComponent<PawnController>().moveCoordinates.y, -10);
+				if (selected.GetComponent<PawnController> ().MoveTo (4) == 0) {
+					moveCoordinates = new Vector3 (selected.GetComponent<PawnController> ().moveCoordinates.x, selected.GetComponent<PawnController> ().moveCoordinates.y, -10);
 					moveBool = true;
 				}
 
 				// update UI
-				UIUpdatePawnInfo(selected, 1);
+				UIUpdatePawnInfo (selected, 1);
 			}
 		}
 
@@ -663,26 +662,24 @@ public class CameraControls : MonoBehaviour {
 		if ((mouseX < 7) && (transform.position.x > CameraNWEdge.transform.position.x + 12) && (!paused)) {
 
 			// move camera left
-			transform.position =new Vector3(transform.position.x - 0.1f, transform.position.y, transform.position.z);
+			transform.position = new Vector3 (transform.position.x - 0.1f, transform.position.y, transform.position.z);
 
-		}
-		else if ((mouseX >Screen.width -7) && (transform.position.x < CameraSEEdge.transform.position.x - 13) && (!paused)) {
+		} else if ((mouseX > Screen.width - 7) && (transform.position.x < CameraSEEdge.transform.position.x - 13) && (!paused)) {
 
 			// move camera right
-			transform.position =new Vector3(transform.position.x + 0.1f, transform.position.y, transform.position.z);
+			transform.position = new Vector3 (transform.position.x + 0.1f, transform.position.y, transform.position.z);
 
 		}
 
 		if ((mouseY < 5) && (transform.position.y > CameraSEEdge.transform.position.y + 6) && (!paused)) {
 			
 			// move camera down
-			transform.position =new Vector3(transform.position.x, transform.position.y - 0.1f, transform.position.z);
+			transform.position = new Vector3 (transform.position.x, transform.position.y - 0.1f, transform.position.z);
 
-		}
-		else if ((mouseY >Screen.height -7) && (transform.position.y < CameraNWEdge.transform.position.y - 7) && (!paused)) {
+		} else if ((mouseY > Screen.height - 7) && (transform.position.y < CameraNWEdge.transform.position.y - 7) && (!paused)) {
 			
 			// move camera up
-			transform.position =new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z);
+			transform.position = new Vector3 (transform.position.x, transform.position.y + 0.1f, transform.position.z);
 			
 		}
 
@@ -690,7 +687,7 @@ public class CameraControls : MonoBehaviour {
 		if (moveBool == true) {
 			// check if we moved
 			Vector3 oldPosition = transform.position;
-			transform.position = Vector3.Lerp(transform.position, moveCoordinates, 10*Time.deltaTime);
+			transform.position = Vector3.Lerp (transform.position, moveCoordinates, 10 * Time.deltaTime);
 
 			if (oldPosition == transform.position) {
 				moveBool = false;
@@ -698,31 +695,31 @@ public class CameraControls : MonoBehaviour {
 		}
 
 		// depth scrolling
-		if ((scrollValue = Input.GetAxis("Mouse ScrollWheel")) != 0) // forward
-		{
+		if ((scrollValue = Input.GetAxis ("Mouse ScrollWheel")) != 0) { // forward
 			if (scrollValue > 0) {
 				Camera.main.orthographicSize--;
-			}
-			else {
+			} else {
 				Camera.main.orthographicSize++;
 			}
 
-			Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, cameraMin, cameraMax );
+			Camera.main.orthographicSize = Mathf.Clamp (Camera.main.orthographicSize, cameraMin, cameraMax);
 		}
 		
 		// handle space button
 		if (Input.GetKeyDown ("space")) {
 			TakeTurn ();
 		}
+
+		UIResourceUpdate ();
 	}
 
-	public PlayerController GetPlayerController () {
+	public PlayerController GetPlayerController ()
+	{
 		PlayerController player;
 		
 		if (currentPlayer == 1) {
 			player = levelInit.GetComponent<LevelInit> ().player1;
-		} 
-		else {
+		} else {
 			player = levelInit.GetComponent<LevelInit> ().player2;
 		}
 

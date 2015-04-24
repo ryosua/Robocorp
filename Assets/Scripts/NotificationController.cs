@@ -58,6 +58,8 @@ public class NotificationController : MonoBehaviour {
 
 		// activate button
 		OKButton.SetActive (true);
+
+
 	}
 
 	private void SetNotificationPanelAndTextAlpha(float f) {
