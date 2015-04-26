@@ -1,5 +1,7 @@
 ﻿public enum UnitType {
 
+	Fortification,
+
 	HeavyBot,
 
 	MeleeBot,

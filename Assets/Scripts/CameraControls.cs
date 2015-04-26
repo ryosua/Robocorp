@@ -35,6 +35,7 @@ public class CameraControls : MonoBehaviour
 	public GameObject TradingPanel;
 
 	// red unit prefabs
+	public GameObject FortificationRedPrefab;
 	public GameObject SettlerBotRedPrefab;
 	public GameObject HeavyBotRedPrefab;
 	public GameObject MeleeBotRedPrefab;
@@ -43,6 +44,7 @@ public class CameraControls : MonoBehaviour
 	public GameObject BaseRedPrefab;
 
 	// blue unit prefabs
+	public GameObject FortificationBluePrefab;
 	public GameObject SettlerBotBluePrefab;
 	public GameObject HeavyBotBluePrefab;
 	public GameObject MeleeBotBluePrefab;
@@ -344,6 +346,9 @@ public class CameraControls : MonoBehaviour
 				chosenPrefab = BaseRedPrefab;
 				resetBase = true;
 				break;
+			case UnitType.Fortification: 
+				chosenPrefab = FortificationRedPrefab;
+				break;
 			case UnitType.SettlerBot: 
 				chosenPrefab = SettlerBotRedPrefab;
 				break;
@@ -366,6 +371,9 @@ public class CameraControls : MonoBehaviour
 			case UnitType.Base:
 				chosenPrefab = BaseBluePrefab;
 				resetBase = true;
+				break;
+			case UnitType.Fortification: 
+				chosenPrefab = FortificationBluePrefab;
 				break;
 			case UnitType.SettlerBot: 
 				chosenPrefab = SettlerBotBluePrefab;
@@ -399,7 +407,7 @@ public class CameraControls : MonoBehaviour
 			}
 		} else {
 			// show UI panel saying the player can't afford it
-			GetComponent<NotificationController> ().ShowNotification ("You can not afford this robot.");
+			GetComponent<NotificationController> ().ShowNotification ("You can not afford to buy this.");
 		}
 		
 		// The unit has been placed.

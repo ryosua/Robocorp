@@ -38,6 +38,18 @@ public class BuildController : MonoBehaviour {
 		print ("Base built");
 	}
 
+	public void OnBuyFortificationClick () {
+		UnitType unit = UnitType.Fortification;
+		
+		// Close build menu
+		CloseBuildPanel();
+		
+		// Spawn the unit nearby
+		cameraControls.SpawnSelection (unit);
+		
+		print ("Fortification bought");
+	}
+
 	public void OnBuyWorkerBotClick () {
 		UnitType unit = UnitType.WorkerBot;
 		
@@ -76,6 +88,7 @@ public class BuildController : MonoBehaviour {
 
 	public void OnMineClick() {
 		cameraControls.MineTile ();
+		print ("Claim resource clicked.");
 	}
 
 	// Use this for initialization
