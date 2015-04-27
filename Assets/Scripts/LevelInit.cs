@@ -252,6 +252,7 @@ public class LevelInit : MonoBehaviour {
 
 		mainCamera.BroadcastMessage ("SetParams");
 		mainCamera.BroadcastMessage ("UIResourceUpdate");
+
 	}
 
 	// Update is called once per frame

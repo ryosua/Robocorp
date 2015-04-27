@@ -32,9 +32,9 @@ public class PlayerController {
 		goldCount = startGold;
 		oilCount = startOil;
 
-		oreTerritory = 0;
-		goldTerritory = 0;
-		oilTerritory = 0;
+		oreTerritory = 1;
+		goldTerritory = 1;
+		oilTerritory = 1;
 
 	}
 
