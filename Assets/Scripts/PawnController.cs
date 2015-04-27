@@ -30,6 +30,7 @@ public class PawnController : Pawn {
 	public int currentMoves;
 
 	public GameObject mainCamera;
+	public GameObject deathParticle;
 
 	// tile info
 	public GameObject currentTile;
@@ -84,15 +85,47 @@ public class PawnController : Pawn {
 
 	// code to self-destruct (if health reaches 0, or if chosen)
 	public void Destroy() {
+		StartCoroutine (DestroyWithParticle());
+
+	}
+
+	private IEnumerator DestroyWithParticle() {
+
+		// play death particle
+		deathParticle.SetActive (true);
+		deathParticle.GetComponent<ParticleSystem>().Play();
 
 		// reset the tile info
 		currentTile.GetComponent<GroundScript> ().occupied = false;
 		currentTile.GetComponent<GroundScript> ().occupiedObject = null;
 
+		// wait for particle to finish
+		yield return new WaitForSeconds(5);
+
 		// delete this unit from the owning player's unit list
 		if (owningPlayer == 1) {
 			mainCamera.GetComponent<CameraControls>().levelInit.GetComponent<LevelInit>().player1.RemoveUnit (unitID);
-		} 
+		}
+		else {
+			mainCamera.GetComponent<CameraControls>().levelInit.GetComponent<LevelInit>().player2.RemoveUnit (unitID);
+		}
+
+		// delete this object
+		GameObject.Destroy (transform.gameObject);
+
+		yield return 0;
+	}
+
+	// destroy unit without particle
+	public void DestroyNoParticle() {
+		// reset the tile info
+		currentTile.GetComponent<GroundScript> ().occupied = false;
+		currentTile.GetComponent<GroundScript> ().occupiedObject = null;
+		
+		// delete this unit from the owning player's unit list
+		if (owningPlayer == 1) {
+			mainCamera.GetComponent<CameraControls>().levelInit.GetComponent<LevelInit>().player1.RemoveUnit (unitID);
+		}
 		else {
 			mainCamera.GetComponent<CameraControls>().levelInit.GetComponent<LevelInit>().player2.RemoveUnit (unitID);
 		}

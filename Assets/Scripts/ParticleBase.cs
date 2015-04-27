@@ -43,6 +43,13 @@ public class ParticleBase : PawnController {
 			ps.Play ();
 		}
 	}
+
+	// function to stop a particle
+	void StopParticle() {
+		if (ps.isPlaying == true) {
+			ps.Stop ();
+		}
+	}
 	
 	public override int MoveTo(int direction) {
 		// delibrately blank

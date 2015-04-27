@@ -63,6 +63,8 @@ public class CameraControls : MonoBehaviour
 	public int oilConversion;
 	public int winGoldCount;
 
+	public int turnCount;
+
 	// camera move bool
 	bool moveBool;
 	int cameraMin;
@@ -96,10 +98,14 @@ public class CameraControls : MonoBehaviour
 		lastSelected = null;
 		paused = false;
 		turn = 1;
+		turnCount = 1;
 
 		cameraMax = 10;
 		cameraMin = 1;
 		scrollValue = 0F;
+
+		// display first turn indicator
+		GetComponent<NotificationController> ().ShowNotification ("Turn " + turnCount.ToString ());
 	}
 
 	// trade function for resources to gold. 1 for ore, 2 for oil
@@ -152,11 +158,19 @@ public class CameraControls : MonoBehaviour
 	// set camera to other player between turns
 	public void TakeTurn ()
 	{
+		// deselect units
+		selected = lastSelected = null;
+		selectorParticle.BroadcastMessage ("FlashTo", CameraSEEdge);
+		UIDeselectPawn ();
+
 		if (turn == 1) {
 
 			// do turn bookkeeping
 			levelInit.GetComponent<LevelInit> ().player2.TakeTurn ();
 			turn = 0;
+
+			GetComponent<NotificationController> ().ShowNotification ("Turn " + turnCount.ToString ());
+			turnCount++;
 
 			// move camera to player 2's base
 			MoveTo (player2Base);
@@ -168,6 +182,8 @@ public class CameraControls : MonoBehaviour
 			// do turn bookkeeping
 			levelInit.GetComponent<LevelInit> ().player1.TakeTurn ();
 			turn = 1;
+
+			GetComponent<NotificationController> ().ShowNotification ("Turn " + turnCount.ToString ());
 
 			// move camera to player 1's base
 			MoveTo (player1Base);
@@ -183,6 +199,7 @@ public class CameraControls : MonoBehaviour
 
 		// enable loss panel
 		lossPanel.SetActive (true);
+		selectorParticle.BroadcastMessage ("StopParticle");
 
 		// check who lost, set text accordingly
 		if (playerNumber == 1) {
@@ -463,6 +480,7 @@ public class CameraControls : MonoBehaviour
 			}
 		}
 		// no valid spot to spawn
+		GetComponent<NotificationController> ().ShowNotification ("No Open square around unit to build into!");
 		return null;
 	}
 
@@ -514,7 +532,7 @@ public class CameraControls : MonoBehaviour
 						selectorParticle.GetComponent<ParticleBase> ().selectedPawn = selected;
 
 						// move selection particle
-						selectorParticle.BroadcastMessage ("FlashTo", selected.transform.gameObject);
+						selectorParticle.BroadcastMessage ("FlashTo", selected);
 						selectorParticle.BroadcastMessage ("StartParticle");
 
 						// update UI (flush it really quick in case we are going from one pawn to another
@@ -537,7 +555,7 @@ public class CameraControls : MonoBehaviour
 
 					// deselect pawn, move selection particle off screen
 					selected = null;
-					selectorParticle.BroadcastMessage ("FlashTo", CameraSEEdge.transform.gameObject);
+					selectorParticle.BroadcastMessage ("FlashTo", CameraSEEdge);
 
 					// update UI
 					UIDeselectPawn ();

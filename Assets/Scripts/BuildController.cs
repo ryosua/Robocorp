@@ -29,10 +29,10 @@ public class BuildController : MonoBehaviour {
 		cameraControls.SpawnSelection (unit);
 
 		if (cameraControls.currentPlayer == 1) {
-			cameraControls.levelInit.GetComponent<LevelInit> ().settlerUnit1.GetComponent<PawnController> ().Destroy ();
+			cameraControls.levelInit.GetComponent<LevelInit> ().settlerUnit1.GetComponent<PawnController> ().DestroyNoParticle();
 		} 
 		else {
-			cameraControls.levelInit.GetComponent<LevelInit> ().settlerUnit2.GetComponent<PawnController> ().Destroy ();
+			cameraControls.levelInit.GetComponent<LevelInit> ().settlerUnit2.GetComponent<PawnController> ().DestroyNoParticle();
 		}
 
 		print ("Base built");

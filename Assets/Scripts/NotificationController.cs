@@ -5,14 +5,13 @@ using System.Collections;
 public class NotificationController : MonoBehaviour {
 
 	public GameObject NotificationPanel;
-	public GameObject OKButton;
 	public Text NotificationText;
 
 	private bool showingNotification = false;
 
 	// Use this for initialization
 	void Start () {
-		OKButton.SetActive (false);
+
 		// Hide the notification panel.
 		SetNotificationPanelAndTextAlpha (0);
 
@@ -34,15 +33,14 @@ public class NotificationController : MonoBehaviour {
 	}
 
 	public void CallFadeOut() {
-		StartCoroutine("FadeNotificationOut");
 	}
 
 	private IEnumerator FadeNotificationOut () {
 
-		// hide button
-		OKButton.SetActive (false);
+		// wait to fade out
+		yield return new WaitForSeconds(1.3f);
 
-		for (float f = 1f; f >= 0; f -= 0.01f) {
+		for (float f = 1f; f >= 0; f -= 0.02f) {
 			SetNotificationPanelAndTextAlpha (f);
 			yield return null;
 		}
@@ -51,15 +49,13 @@ public class NotificationController : MonoBehaviour {
 
 	private IEnumerator FadeNotificationIn () {
 		showingNotification = true;
-		for (float f = 0f; f <= 1; f += 0.01f) {
+		for (float f = 0f; f <= 1; f += 0.02f) {
 			SetNotificationPanelAndTextAlpha (f);
 			yield return null;
 		}
 
-		// activate button
-		OKButton.SetActive (true);
-
-
+		// call fade out function
+		StartCoroutine("FadeNotificationOut");
 	}
 
 	private void SetNotificationPanelAndTextAlpha(float f) {
