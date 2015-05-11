@@ -1,4 +1,8 @@
 # IST-446-Project
+A semester project by Sean Lane, Eric Panulla, Anthony Wano, Ryan Yosua
+
+### Project Description
+RoboCorp is a turn based strategy game based on the idea of resource management. Take control of a futuristic mining corporation and find a way to remove the competition from a newly discovered, mineral rich planet. Mine oil, ore, and gold and use them to either build an army and destroy the enemy base, or trade for more gold and buy the planet. Strategically plan either strategy on an unfamiliar terrain, which randomly generates each game to ensure that every play through is unique, and that no one strategy is always intrinsically better.
 
 ### Project Setup
 1. Download Unity 5.
